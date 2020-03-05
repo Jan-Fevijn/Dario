@@ -1,0 +1,90 @@
+/* CSS van Algemene Tags */
+body {
+    margin: 0;
+    padding: 0;
+
+    background-color: darkgray;
+    background-image: url(../images/);
+    image-rendering: optimizeQuality;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+
+    padding: 20px;
+}
+
+table {
+    margin: 0 auto;
+}
+ 
+
+/* CSS van MenuBalk */
+
+.menu ul {
+  list-style: none;
+  background-color: #444;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4em;
+  line-height: 40px;
+  height: 40px;
+  border-bottom: 1px solid #888;
+}
+ 
+.menu a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  transition: .5s background-color;
+}
+ 
+.menu a:hover {
+  background-color: rgb(13, 109, 173);
+}
+ 
+.menu a.active {
+  background-color: #fff;
+  color: #444;
+  cursor: default;
+}
+
+@media screen and (min-width: 600px) {
+    .menu li {
+        width: 120px;
+        border-bottom: none;
+        height: 50px;
+        line-height: 50px;
+        font-size: 1.2em;
+      }
+     
+    .menu li {
+        display: inline-block;
+        margin-right: 0;
+      }
+    }
+
+/* CSS van Container/Inhoud */
+
+.inhoud {
+    text-align: center;
+
+    height: 100%;
+    width: 100%;
+
+    position: absolute;
+    margin: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
