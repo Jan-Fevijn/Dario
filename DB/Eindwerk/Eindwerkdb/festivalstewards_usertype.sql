@@ -16,37 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `steward`
+-- Table structure for table `usertype`
 --
 
-DROP TABLE IF EXISTS `steward`;
+DROP TABLE IF EXISTS `usertype`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `steward` (
-  `idSteward` int(11) NOT NULL AUTO_INCREMENT,
-  `Voornaam` varchar(45) NOT NULL,
+CREATE TABLE `usertype` (
+  `idUserType` int(11) NOT NULL AUTO_INCREMENT,
   `Naam` varchar(45) NOT NULL,
-  `Telefoonnummer` int(11) NOT NULL,
-  `Wachtwoord` varchar(45) NOT NULL,
-  `Gebruikersnaam` varchar(45) NOT NULL,
-  `User_TypeID` int(11) NOT NULL,
-  PRIMARY KEY (`idSteward`),
-  UNIQUE KEY `idStewards_UNIQUE` (`idSteward`),
-  UNIQUE KEY `Telefoonnummer_UNIQUE` (`Telefoonnummer`),
-  UNIQUE KEY `Gebruikersnaam_UNIQUE` (`Gebruikersnaam`),
-  KEY `user_idx` (`User_TypeID`),
-  CONSTRAINT `user` FOREIGN KEY (`User_TypeID`) REFERENCES `usertype` (`idUserType`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`idUserType`),
+  UNIQUE KEY `idUserType_UNIQUE` (`idUserType`),
+  UNIQUE KEY `Naam_UNIQUE` (`Naam`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `steward`
+-- Dumping data for table `usertype`
 --
 
-LOCK TABLES `steward` WRITE;
-/*!40000 ALTER TABLE `steward` DISABLE KEYS */;
-INSERT INTO `steward` VALUES (4,'admin','admin',0,'admin','admin',2),(6,'Dario','Decuypere',1,'dario','dario',1);
-/*!40000 ALTER TABLE `steward` ENABLE KEYS */;
+LOCK TABLES `usertype` WRITE;
+/*!40000 ALTER TABLE `usertype` DISABLE KEYS */;
+INSERT INTO `usertype` VALUES (1,'admin'),(2,'Gebruiker');
+/*!40000 ALTER TABLE `usertype` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
