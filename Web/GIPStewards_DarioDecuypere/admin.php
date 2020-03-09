@@ -9,6 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("location: index.php");
 }
 ?>
+
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  
+}
+?>
             
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="masthead mb-auto">
+  <header class="masthead">
     <div class="inner">
       <h3 class="masthead-brand">Admin</h3>
       <nav class="nav nav-masthead justify-content-center">
@@ -34,8 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </header>
 
-  <main role="main" class="inner cover">
-		    
+<form action="admin.php" method="POST">
+  <h3>Filter Steward</h3>
+  <label class="achternaam">Achternaam</label>
+  <input type="text" name="Achternaam" placeholder="Achternaam">
+  <button type="submit">Filter</button>
+</form>
+
+  <main role="main" class="inner cover">    
         <table>
 			    <tr>
                     <th>Voornaam</th>
@@ -46,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			    </tr>
                 <?php 
 			        $sql_data = "SELECT * from stewardsinfo";
-
 
                     $resultaat = $conn->query($sql_data);
             
@@ -67,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			    ?>
             </table>
         </p>
-  </main>
+    </main>
 </div>
 </body>
 </html>

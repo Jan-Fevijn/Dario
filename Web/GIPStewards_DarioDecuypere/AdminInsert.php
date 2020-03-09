@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="masthead mb-auto">
+  <header class="masthead">
     <div class="inner">
       <h3 class="masthead-brand">Admin Bijvoegen</h3>
       <nav class="nav nav-masthead justify-content-center">
@@ -34,8 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </header>
 
-  <form action="admininsert.php" method="post">
-
+<form action="admininsert.php" method="POST">
+  <h3>Aanmaken Steward</h3>
+  <label class="achternaam">Voornaam</label>
+  <input type="text" name="Achternaam" placeholder="Achternaam">
+  <label class="achternaam">Achternaam</label>
+  <input type="text" name="Achternaam" placeholder="Achternaam">
+  <button type="submit">Aanmaken</button>
 </form>
 
   <main role="main" class="inner cover">

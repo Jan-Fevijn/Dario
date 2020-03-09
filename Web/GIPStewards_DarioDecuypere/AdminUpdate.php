@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="masthead mb-auto">
+  <header class="masthead">
     <div class="inner">
       <h3 class="masthead-brand">Admin Update</h3>
       <nav class="nav nav-masthead justify-content-center">
@@ -34,9 +34,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </header>
 
-  <form action="adminupdate.php" method="post">
+<!--<form action="adminupdate.php" method="POST">
+  <h3>Filter Steward</h3>
+  <label class="ID">ID</label>
+  <input type="text" name="ID" placeholder="ID">
+  <label class="Voornaam">Voornaam</label>
+  <input type="text" name="Voornaam" placeholder="Voornaam">
+  <label class="Achternaam">Achternaam</label>
+  <input type="text" name="Achternaam" placeholder="Achternaam">
+  <label class="Uur">Uur</label>
+  <input type="text" name="Uur" placeholder="Uur">
+  <label class="Dag">Dag</label>
+  <input type="text" name="Dag" placeholder="Dag">
+  <label class="Plaats">Plaats</label>
+  <input type="text" name="Plaats" placeholder="Plaats">
 
-  </form>
+  <button type="submit">Update</button>
+</form>-->
 
   <main role="main" class="inner cover">
 		    

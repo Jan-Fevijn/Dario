@@ -1,35 +1,34 @@
 <?php
 include 'conn.php';
 
-$_SESSION['user'] == 1;
+function checkLogIn() {
+    
+    if (isset($_SESSION["loggedIn"])) {
+        if(isset($_SESSION['user'])){
+        if($_SESSION['user'] == 1) {
+            header("location: admin.php");
+        } elseif($_SESSION['user'] == 2){
+            header("location: Times.php");
 
-function checkLogIngbr() {
-    if ($_SESSION["loggedIn"] == TRUE) {
-        header("location: Times.php");
+        }}
     } else {
         header("location: index.php");
     }
+    
 }
 
-function checkloginadmin() {
-    if ($_SESSION["user"] == 1) {
-        header("location: admin.php");
-    } else {
-        header("location: Times.php");
-    }
-}
 
-checkLogIngbr();
-checkloginadmin();
+// Start Programma
 
+
+checkLogIn();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+    
     // Controle op invoer
     //https://www.youtube.com/watch?v=3bGDe0rbImY hashcoding
     
-    if (isset($_POST["Gebruikersnaam"]) && isset($_POST["Wachtwoord"]) && !empty($_POST["Gebruikersnaam"]) && 
-        !empty($_POST["Wachtwoord"])){
-            
+    if (isset($_POST["Gebruikersnaam"]) && isset($_POST["Wachtwoord"])){
+
             // controle gbr en ww + guery maken
             $gbr = $_POST["Gebruikersnaam"];
             $ww = $_POST["Wachtwoord"];
@@ -37,27 +36,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $gbr = strip_tags(mysqli_real_escape_string($conn, trim($gbr)));
             $ww = strip_tags(mysqli_real_escape_string($conn, trim($ww)));
 
-            $hashww = password_hash($ww, PASSWORD_DEFAULT);
+            $hashww = password_verify($ww, PASSWORD_DEFAULT);
             
-            $sql_controleGebruiker = "SELECT idSteward, Gebruikersnaam, Wachtwoord, User_TypeID FROM steward WHERE Gebruikersnaam = '" . $gbr . "' and Wachtwoord = '" . $hashww . "'";
+            $sql_controleGebruiker = "SELECT idSteward, Gebruikersnaam, Wachtwoord, User_TypeID FROM steward WHERE Gebruikersnaam = '" . $gbr . "' and Wachtwoord = '" . $ww . "'";
+            $result = $conn->query($sql_controleGebruiker);
 
-            $resultaatGebruiker = mysqli_query($conn,$sql_controleGebruiker);
-
-            if ($row = mysqli_fetch_assoc($resultaatGebruiker)){
-                if ($_SESSION['user'] == $row['User_TypeID']) {
-                    checkloginadmin();
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()){
+                    echo "row";
+                    $_SESSION['user'] = $row['User_TypeID'];
+                    $_SESSION["loggedIn"] = $row["idSteward"];
+                    checkLogIn();
                 }
-                else{
-                $_SESSION["loggedIn"] = TRUE;
-                $_SESSION["loggedIn"] = $row["idSteward"];
-                checkLogIngbr();
-                }
-            }
-            else{
-                $_SESSION["loggedIn"] = FALSE;
-                checkLogIngbr();
+            } else {
+                $_SESSION["loggedIn"] = NULL;
                 header('location: index.php?fout=gebruiker niet gevonden of foutief wachtwoord.');
             }
-  } 
-}
+  } }
 ?>
