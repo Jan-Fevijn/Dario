@@ -12,8 +12,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
+if (isset($GET['filter']))
+{
+    $value = $GET['value'];
+
+    $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`)) LIKE '%".$value."%'";
+    $search_result = filterTable($query);
+    
+}
+ else {
+    $query = "SELECT * FROM `stewardinfo`";
+    $search_result = filterTable($query);
+}
+
+function filterTable($query)
+{
+    $connection = mysqli_connect("localhost", "root", "usbw", "festivalstewards", "3307");
+    $filter_Result = mysqli_query($connection, $query);
+    return $filter_Result;
 }
 ?>
             
@@ -41,44 +57,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </header>
 
-<form action="admin.php" method="POST">
-  <h3>Filter Steward</h3>
-  <label class="achternaam">Achternaam</label>
-  <input type="text" name="Achternaam" placeholder="Achternaam">
-  <button type="submit">Filter</button>
-</form>
 
-  <main role="main" class="inner cover">    
-        <table>
-			    <tr>
+  <main role="main" class="inner cover">  
+
+  <form action="admin.php" method="GET" class="filter">
+  <h4>Filter</h4>
+  <label class="achternaam">Naam:</label>
+  <input type="text" name="value" placeholder="Naam" class="input">
+  <button type="submit" name="filter" class="filterbtn">Filter</button>
+
+  <table>
+                <tr>
                     <th>Voornaam</th>
                     <th>Naam</th>
                     <th>Tijd</th>
                     <th>Dag</th>
                     <th>Plaats</th>
-			    </tr>
-                <?php 
-			        $sql_data = "SELECT * from stewardsinfo";
+                </tr>
 
-                    $resultaat = $conn->query($sql_data);
-            
-                    if ($resultaat->num_rows > 0) {
-            
-            
-                        while($row = $resultaat->fetch_assoc()){
-                            echo "<tr><td>" . $row["Voornaam"] . "</td><td>" . $row["Naam"] . "</td><td>" . $row["Tijd"] . "</td>
-                            <td>" . $row["Dag"] . "</td><td>" . $row["afkorting"] . "</td></tr>"; 
-                        }
-                        echo "</table>";
-                    }
-                    else{
-                        if ($debug) echo "geen resultaat";
-                    }
-
-                         $conn->Close();
-			    ?>
+                <?php while($row = mysqli_fetch_array($search_result)):?>
+                <tr>
+                    <td><?php echo $row['Voornaam'];?></td>
+                    <td><?php echo $row['Naam'];?></td>
+                    <td><?php echo $row['Tijd'];?></td>
+                    <td><?php echo $row['Dag'];?></td>
+                    <td><?php echo $row['Afkorting'];?></td>
+                </tr>
+                <?php endwhile;?>
             </table>
-        </p>
+</form>  
     </main>
 </div>
 </body>

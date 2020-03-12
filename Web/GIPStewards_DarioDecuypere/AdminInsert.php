@@ -3,10 +3,7 @@ include 'conn.php';
 ?>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    session_unset();
-    session_destroy();
-    header("location: index.php");
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
 }
 ?>
             
@@ -34,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </header>
 
-<form action="admininsert.php" method="POST">
+<form action="admininsert.php" method="GET">
   <h3>Aanmaken Steward</h3>
   <label class="achternaam">Voornaam</label>
   <input type="text" name="Achternaam" placeholder="Achternaam">

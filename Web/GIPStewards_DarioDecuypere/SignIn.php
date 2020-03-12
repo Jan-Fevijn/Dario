@@ -10,7 +10,8 @@ function checkLogIn() {
         } elseif($_SESSION['user'] == 2){
             header("location: Times.php");
 
-        }}
+        }
+    }
     } else {
         header("location: index.php");
     }
@@ -43,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()){
-                    echo "row";
                     $_SESSION['user'] = $row['User_TypeID'];
                     $_SESSION["loggedIn"] = $row["idSteward"];
                     checkLogIn();

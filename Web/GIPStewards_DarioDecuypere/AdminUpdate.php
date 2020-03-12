@@ -1,15 +1,7 @@
 <?php
 include 'conn.php';
 ?>
-
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    session_unset();
-    session_destroy();
-    header("location: index.php");
-}
-?>
-            
+      
 <!DOCTYPE html>
 <html lang="en">
 <head>
