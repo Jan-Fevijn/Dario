@@ -12,15 +12,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 <?php
-if (isset($GET['filter']))
+if (isset($_GET['filter']))
 {
-    $value = $GET['value'];
+    $value = $_GET['value'];
 
-    $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`)) LIKE '%".$value."%'";
+    $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`) LIKE '%".$value."%'";
     $search_result = filterTable($query);
     
 }
- else {
+ else{
     $query = "SELECT * FROM `stewardinfo`";
     $search_result = filterTable($query);
 }
@@ -81,7 +81,7 @@ function filterTable($query)
                     <td><?php echo $row['Naam'];?></td>
                     <td><?php echo $row['Tijd'];?></td>
                     <td><?php echo $row['Dag'];?></td>
-                    <td><?php echo $row['Afkorting'];?></td>
+                    <td><?php echo $row['afkorting'];?></td>
                 </tr>
                 <?php endwhile;?>
             </table>
