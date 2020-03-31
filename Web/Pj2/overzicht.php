@@ -1,27 +1,26 @@
 <?php
-include 'conn.php';
+include 'connectie.php';
 ?>
-            
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="CSS/timescss.css">
+    <link rel="stylesheet" href="CSS/algcss.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Times</title>
+    <title>Overzicht</title>
 </head>
 <body>
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Times</h3>
+      <h3 class="masthead-brand">Overzicht</h3>
       <nav class="nav nav-masthead justify-content-center">
-        <a class="nav-link active" href="times.php">Times</a>
-        <a class="nav-link" href="notificaties.php">Notificaties</a>
-        <a class="nav-link" href="Maps.php">Maps</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link active" href="overzicht.php">Home</a>
+        <a class="nav-link" href="evenementaanmaken.php">Evenement Aanmaken</a>
+        <a class="nav-link" href="gerechttoevoegen.php">Gerecht Toevoegen</a>
+        <a class="nav-link" href="gerechtenaanpassenprod.php">Producten Aanpassen</a>
       </nav>
     </div>
   </header>
@@ -30,14 +29,13 @@ include 'conn.php';
 		    
         <table>
 			    <tr>
-                    <th>Voornaam</th>
-                    <th>Naam</th>
-                    <th>Tijd</th>
-                    <th>Dag</th>
-                    <th>Plaats</th>
+                    <th>Evenmenten</th>
+                    <th>Dagen</th>
+                    <th>Personen</th>
+                    <th>Gerechten</th>
 			    </tr>
                 <?php 
-			        $sql_data = "SELECT * from stewardsinfo WHERE idSteward = ". $_SESSION["LoggedIn"] ."";
+			        $sql_data = "SELECT * from alleinformatie";
 
 
                     $resultaat = $conn->query($sql_data);
@@ -46,8 +44,8 @@ include 'conn.php';
             
             
                         while($row = $resultaat->fetch_assoc()){
-                            echo "<tr><td>" . $row["Voornaam"] . "</td><td>" . $row["Naam"] . "</td><td>" . $row["Tijd"] . "</td>
-                            <td>" . $row["Dag"] . "</td><td>" . $row["afkorting"] . "</td></tr>"; 
+                            echo "<tr><td>" . $row["naameve"] . "</td><td>" . $row["dagen"] . "</td><td>" . $row["aantal"] . "</td>
+                            <td>" . $row["naamger"] . "</td></tr>"; 
                         }
                         echo "</table>";
                     }
@@ -60,7 +58,5 @@ include 'conn.php';
             </table>
   </main>
 </div>
-</body>
-</html>
 </body>
 </html>
