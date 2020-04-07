@@ -3,17 +3,8 @@ include 'conn.php';
 ?>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    session_unset();
-    session_destroy();
-    header("location: index.php");
-}
-?>
-
-
-<?php
-if (isset($_GET['filter']))
-{
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    
     $value = $_GET['value'];
 
     $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`) LIKE '%".$value."%'";

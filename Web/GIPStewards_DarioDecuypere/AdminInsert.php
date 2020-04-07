@@ -4,7 +4,7 @@ include 'conn.php';
 
 <?php
  if (isset($_GET["Toevoegen"])){
-  $sql = "INSERT INTO stewardsinfo (idSteward,Voornaam,Naam) VALUES (". $_GET["Stewardid"] ."," . $_GET["Voornaam"] . ",". $_GET["Naam"] .")";
+  $sql = "INSERT INTO stewardsinfo (idSteward,Voornaam,Naam,Tijd,Dag,afkorting) VALUES (". $_GET["Stewardid"] ."," . $_GET["Voornaam"] . ",". $_GET["Naam"] . "," . $_GET["Tijd"] ."," . $_GET["Dag"] . "," . $_GET["Plaats"] .")";
 
   if ($conn->query($sql) === TRUE) {
       header("location:admin.php");

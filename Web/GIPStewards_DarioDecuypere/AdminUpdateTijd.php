@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           if ($_GET["idSteward"] == $row["idSteward"]) {
             $_SESSION["LoggedIn"] = $row["idSteward"];
         ?>
-        <form action="AdminUpdate.php" name="updatefrm" methode="GET">
+        <form action="AdminUpdateTijd.php" name="updatefrm" methode="GET">
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
         <td><input type="text" name="Tijd" value="<?php echo $row["Tijd"]; ?>"></td>
         </form>

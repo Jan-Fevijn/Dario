@@ -26,7 +26,6 @@ checkLogIn();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Controle op invoer
-    //https://www.youtube.com/watch?v=3bGDe0rbImY hashcoding
     
     if (isset($_POST["Gebruikersnaam"]) && isset($_POST["Wachtwoord"])){
 
@@ -36,10 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $gbr = strip_tags(mysqli_real_escape_string($conn, trim($gbr)));
             $ww = strip_tags(mysqli_real_escape_string($conn, trim($ww)));
-
-            $hashww = password_verify($ww, PASSWORD_DEFAULT);
             
-            $sql_controleGebruiker = "SELECT idSteward, Gebruikersnaam, Wachtwoord, User_TypeID FROM steward WHERE Gebruikersnaam = '" . $gbr . "' and Wachtwoord = '" . $ww . "'";
+            $sql_controleGebruiker = "SELECT idSteward, email, Wachtwoord, User_TypeID FROM steward WHERE email = '" . $gbr . "' and Wachtwoord = '" . $ww . "'";
             $result = $conn->query($sql_controleGebruiker);
 
             if ($result->num_rows > 0) {

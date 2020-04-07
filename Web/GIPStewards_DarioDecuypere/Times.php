@@ -37,7 +37,9 @@ include 'conn.php';
                     <th>Plaats</th>
 			    </tr>
                 <?php 
-			        $sql_data = "SELECT * from stewardsinfo WHERE idSteward = ". $_SESSION["LoggedIn"] ."";
+                if (isset($_SESSION["loggedIn"])){
+
+			        $sql_data = "SELECT * from stewardsinfo WHERE idSteward = ". $_SESSION["loggedIn"] ."";
 
 
                     $resultaat = $conn->query($sql_data);
@@ -54,6 +56,7 @@ include 'conn.php';
                     else{
                         if ($debug) echo "geen resultaat";
                     }
+                  }
 
                          $conn->Close();
 			    ?>
