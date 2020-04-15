@@ -17,7 +17,7 @@
         <a class="nav-link" href="times.php">Times</a>
         <a class="nav-link" href="notificaties.php">Notificaties</a>
         <a class="nav-link active" href="Maps.php">Maps</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>

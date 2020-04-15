@@ -1,25 +1,18 @@
 <?php
 include 'conn.php';
-?>
-
-<?php
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    
-    $value = $_GET['value'];
+    if(isset($_GET['value'])){
 
-    $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`) LIKE '%".$value."%'";
-    $search_result = filterTable($query);
-    
-}
- else{
-    $query = "SELECT * FROM `stewardinfo`";
-    $search_result = filterTable($query);
-}
+        $value = $_GET['value'];
+        $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`) LIKE '%".$value."%'";
 
-function filterTable($query)
+    } else{
+        $query = "SELECT * FROM `stewardsinfo`";
+    }
+}
+function filterTable($query, $conn)
 {
-    $connection = mysqli_connect("localhost", "root", "usbw", "festivalstewards", "3307");
-    $filter_Result = mysqli_query($connection, $query);
+    $filter_Result = mysqli_query($conn, $query);
     return $filter_Result;
 }
 ?>
@@ -38,13 +31,12 @@ function filterTable($query)
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Admin</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link active" href="admin.php">Admin</a>
         <a class="nav-link" href="adminupdateTijd.php">Update Tijd</a>
         <a class="nav-link" href="adminupdatePlaats.php">Update Plaats</a>
         <a class="nav-link" href="admininsert.php">Personen Toevoegen</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>
@@ -67,7 +59,11 @@ function filterTable($query)
                     <th>Plaats</th>
                 </tr>
 
-                <?php while($row = mysqli_fetch_array($search_result)):?>
+                <?php 
+                    $result = filterTable($query, $conn);
+                ?>
+
+                <?php while($row = mysqli_fetch_array($result)):?>
                 <tr>
                     <td><?php echo $row['Voornaam'];?></td>
                     <td><?php echo $row['Naam'];?></td>

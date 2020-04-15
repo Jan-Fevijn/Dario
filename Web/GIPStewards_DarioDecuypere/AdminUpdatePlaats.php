@@ -4,7 +4,19 @@ include 'conn.php';
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
   if (isset($_GET["afkorting"])) {
 
-      $sql = "UPDATE stewardsinfo SET afkorting= " . $_GET["afkorting"]  ." WHERE idSteward=". $_SESSION["LoggedIn"] . "";
+    $sql_tijd = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_GET["afkorting"] . "'";
+    $result = $conn->query($sql_tijd);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+          $_SESSION['ID'] = $row['idPlaats'];
+      }
+    }
+      else {
+        echo "niet gevonden";
+      }
+
+      $sql = "UPDATE shift SET idPlaats= '" . $_SESSION['ID']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
 
       if ($conn->query($sql) === TRUE) {
           
@@ -29,13 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Update Plaats</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="admin.php">Admin</a>
         <a class="nav-link" href="adminupdatetijd.php">Update Tijd</a>
         <a class="nav-link active" href="adminupdateplaats.php">Update Plaats</a>
         <a class="nav-link" href="admininsert.php">Personen Toevoegen</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>

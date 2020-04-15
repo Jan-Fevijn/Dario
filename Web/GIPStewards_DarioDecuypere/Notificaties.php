@@ -1,3 +1,14 @@
+<?php
+include 'conn.php';
+include 'classnotificaties.php';
+
+$query = "SELECT *, count(*) as count from notifications
+where recipient_id = 1
+group by `type`, `reference_id`
+order by created desc, unread desc
+limit 20";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,18 +23,21 @@
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Notificaties</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="times.php">Times</a>
         <a class="nav-link active" href="notificaties.php">Notificaties</a>
         <a class="nav-link" href="Maps.php">Maps</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>
 
   <main role="main" class="inner cover">
-    <p class="lead"></p>
+    <p class="lead">
+    <?php
+      echo $query;
+    ?> 
+    </p>
   </main>
 </div>
 </body>

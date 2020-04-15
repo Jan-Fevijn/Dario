@@ -16,12 +16,11 @@ include 'conn.php';
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Times</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link active" href="times.php">Times</a>
         <a class="nav-link" href="notificaties.php">Notificaties</a>
         <a class="nav-link" href="Maps.php">Maps</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>

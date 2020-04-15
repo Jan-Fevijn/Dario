@@ -1,0 +1,15 @@
+                                     GIP Te doen list 
+
+--------------------------------------------------------------------------------------
+
+
+{- google login
+
+- notificatie systeem}
+
+
+-insert (raar)
+
+- Algemene site op punt stellen(laatste)
+
+-VB personen toevoegen(kan nu niet)

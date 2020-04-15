@@ -3,14 +3,37 @@ include 'conn.php';
 ?>
 
 <?php
- if (isset($_GET["Toevoegen"])){
-  $sql = "INSERT INTO stewardsinfo (idSteward,Voornaam,Naam,Tijd,Dag,afkorting) VALUES (". $_GET["Stewardid"] ."," . $_GET["Voornaam"] . ",". $_GET["Naam"] . "," . $_GET["Tijd"] ."," . $_GET["Dag"] . "," . $_GET["Plaats"] .")";
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+ if (isset($_GET["Steward"], $_GET["Tijd"], $_GET["Plaats"]) ){
+
+  //$sql_select = "SELECT idSteward,voornaam,naam FROM steward Where idSteward = '" . $_GET["Steward"] . "'";
+  //$sql_select = "SELECT idTijd,Tijd FROM tijd Where idTijd = '" . $_GET["Tijd"] . "'";
+  //$sql_select = "SELECT idPlaats,afkorting FROM plaats Where idPlaats = '" . $_GET["Plaats"] . "'";
+
+  //$result = $conn->query($sql_select);
+
+  //if ($result->num_rows > 0) {
+      //while($row = $result->fetch_assoc()){
+        //$_SESSION["Steward"] = $row['idSteward'];
+        //$_SESSION["Tijd"] = $row['idTijd'];
+       // $_SESSION["Plaats"] = $row['idPlaats'];
+       // echo "test";
+     // }
+  //} else {
+    //echo "niet gevonden";
+  //}*
+
+
+  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_GET["Steward"] . ",". $_GET["Tijd"] . ",". $_GET["Plaats"] ."')
+  SELECT idSteward, voornaam, naam, idTijd, Tijd, idPlaats, afkorting From steward
+  JOIN tijd on idTijd = idTijd
+  JOIN plaats on idPlaats = idPlaats";
 
   if ($conn->query($sql) === TRUE) {
-      header("location:admin.php");
-  } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "gelukt!";
+    header("location:admin.php");
   }
+}
 }
 ?>
             
@@ -28,32 +51,21 @@ include 'conn.php';
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Admin Bijvoegen</h3>
       <nav class="nav nav-masthead justify-content-center">
       <a class="nav-link" href="admin.php">Admin</a>
         <a class="nav-link" href="adminupdateTijd.php">Update Tijd</a>
         <a class="nav-link" href="adminupdatePlaats.php">Update Plaats</a>
         <a class="nav-link active" href="admininsert.php">Personen Toevoegen</a>
-        <a class="nav-link" href="index.php">Uitloggen</a>
+        <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>
   <form action="AdminInsert.php" method="GET" class="Toevoegen">
-  <h4>Persoon toevoegen</h4>
-  <label class="Stewardid">ID:</label>
-  <input type="text" name="Stewardid" placeholder="ID" class="input">
+  <label class="Tijd">Steward:</label>
+  <input type="text" name="Steward" placeholder="Steward" class="input">
   <br>
-  <label class="Voornaam">Voornaam:</label>
-  <input type="text" name="Voornaam" placeholder="Voornaam" class="input">
-  <br>
-  <label class="Naam">Naam:</label>
-  <input type="text" name="Naam" placeholder="Naam" class="input">
-  <br>
-  <label class="Tijd">Tijd:</label>
+  <label class="Dag">Tijd:</label>
   <input type="text" name="Tijd" placeholder="Tijd" class="input">
-  <br>
-  <label class="Dag">Dag:</label>
-  <input type="text" name="Dag" placeholder="Dag" class="input">
   <br>
   <label class="Plaats">Plaats:</label>
   <input type="text" name="Plaats" placeholder="Plaats" class="input">
