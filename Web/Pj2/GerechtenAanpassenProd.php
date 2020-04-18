@@ -1,5 +1,31 @@
 <?php
 include 'connectie.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+  if (isset($_GET["naamproduct"])) {
+
+    $sql_tijd = "SELECT idproduct,naamprod FROM product WHERE naamprod = '" . $_GET["naamproduct"] . "'";
+    $result = $conn->query($sql_tijd);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+          $_SESSION['ID'] = $row['idproduct'];
+      }
+    }
+      else {
+        echo "niet gevonden";
+      }
+
+      
+    $sql = "UPDATE gerechtproduct SET idproduct= '" . $_SESSION['ID']  ."' WHERE idgerecht=". $_SESSION["actief"] . "";
+
+      if ($conn->query($sql) === TRUE) {
+          
+      } else {
+          echo "fout bij het aanpassen: " . $conn->error;
+      }
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +41,6 @@ include 'connectie.php';
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Product Aanpassen</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="overzicht.php">Home</a>
         <a class="nav-link" href="evenementaanmaken.php">Evenement Aanmaken</a>
@@ -25,38 +50,64 @@ include 'connectie.php';
     </div>
   </header>
 
-  <main role="main" class="inner cover">
-		    
-        <table>
-			    <tr>
-                    <th>Evenmenten</th>
-                    <th>Dagen</th>
-                    <th>Personen</th>
-                    <th>Gerechten</th>
-			    </tr>
-                <?php 
-			        $sql_data = "SELECT * from alleinformatie";
+  <div id="container" class="container">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Product</th>
+        <th scope="col">Gerecht</th>
+        <th scope="col">Hoeveelheid</th>
+        <th scope="col">Eenheid</th>
+      </tr>
+    </thead>
+    <tbody>
 
+    <?php 
+    $sql = "SELECT * FROM prodger";
 
-                    $resultaat = $conn->query($sql_data);
-            
-                    if ($resultaat->num_rows > 0) {
-            
-            
-                        while($row = $resultaat->fetch_assoc()){
-                            echo "<tr><td>" . $row["naameve"] . "</td><td>" . $row["dagen"] . "</td><td>" . $row["aantal"] . "</td>
-                            <td>" . $row["naamger"] . "</td></tr>"; 
-                        }
-                        echo "</table>";
-                    }
-                    else{
-                        if ($debug) echo "geen resultaat";
-                    }
+    $result = $conn->query($sql);
 
-                         $conn->Close();
-			    ?>
-            </table>
-  </main>
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {     
+    ?>
+
+      <tr>
+      <?php
+        if (isset($_GET["idgerecht"])) {
+          if ($_GET["idgerecht"] == $row["idgerecht"]) {
+            $_SESSION["actief"] = $row["idgerecht"];
+        ?>
+        <form action="gerechtenaanpassenprod.php" name="updatefrm" methode="GET">
+        <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
+        <td><input type="text" name="naamproduct" value="<?php echo $row["naamprod"]; ?>"></td>
+        </form>
+        <?php 
+          }else{
+            ?>
+            <th scope="row"><a class="btn btn-outline-primary" href="?idgerecht=<?php echo $row["idproduct"] ?>">Aanpassen</a></th>
+            <td><?php echo $row["naamprod"]; ?></td>
+            <?php
+
+          }
+        }else {
+        ?>
+        <th scope="row"><a class="btn btn-outline-primary" href="?idgerecht=<?php echo $row["idproduct"] ?>">Aanpassen</a></th>
+        <td><?php echo $row["naamprod"]; ?></td>
+        <?php
+        }
+        ?>
+        <td><?php echo $row["naamger"]; ?></td>
+        <td><?php echo $row["hoeveelheid"]; ?></td>
+        <td><?php echo $row["eenheid"]; ?></td>
+      </tr>
+
+  <?php 
+        }
+      }
+  ?>
+    </tbody>
+  </table>
 </div>
 </body>
 </html>

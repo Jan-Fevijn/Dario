@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+    $_SESSION["actief"];
+
     $servername = "localhost";
     $username = "root";
     $password = "usbw";
