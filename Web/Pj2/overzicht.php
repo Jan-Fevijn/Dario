@@ -15,11 +15,9 @@ include 'connectie.php';
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="masthead">
     <div class="inner">
-      <h3 class="masthead-brand">Overzicht</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link active" href="overzicht.php">Home</a>
-        <a class="nav-link" href="evenementaanmaken.php">Evenement Aanmaken</a>
-        <a class="nav-link" href="gerechttoevoegen.php">Gerecht Toevoegen</a>
+        <a class="nav-link" href="evenementaanmaken.php">Evenement en gerechten Aanmaken</a>
         <a class="nav-link" href="gerechtenaanpassenprod.php">Producten Aanpassen</a>
       </nav>
     </div>

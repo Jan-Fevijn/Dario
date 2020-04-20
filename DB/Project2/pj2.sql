@@ -16,33 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `administrator`
---
-
-DROP TABLE IF EXISTS `administrator`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `administrator` (
-  `idadmin` int(11) NOT NULL AUTO_INCREMENT,
-  `gebruikersnaam` varchar(45) DEFAULT NULL,
-  `wachtwoord` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idadmin`),
-  UNIQUE KEY `idadmin_UNIQUE` (`idadmin`),
-  UNIQUE KEY `gebruikersnaam_UNIQUE` (`gebruikersnaam`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `administrator`
---
-
-LOCK TABLES `administrator` WRITE;
-/*!40000 ALTER TABLE `administrator` DISABLE KEYS */;
-INSERT INTO `administrator` VALUES (1,'admin','admin');
-/*!40000 ALTER TABLE `administrator` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Temporary view structure for view `alleinformatie`
 --
 
@@ -96,7 +69,7 @@ CREATE TABLE `gerecht` (
   `naamger` varchar(45) NOT NULL,
   PRIMARY KEY (`idgerecht`),
   UNIQUE KEY `idgerecht_UNIQUE` (`idgerecht`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +78,7 @@ CREATE TABLE `gerecht` (
 
 LOCK TABLES `gerecht` WRITE;
 /*!40000 ALTER TABLE `gerecht` DISABLE KEYS */;
-INSERT INTO `gerecht` VALUES (1,'pannekoeken'),(2,'spaghetti'),(3,'lasagne'),(4,'brownie'),(5,'croque monsieur'),(6,'pudding');
+INSERT INTO `gerecht` VALUES (1,'pannekoeken'),(2,'spaghetti'),(3,'lasagne'),(4,'brownie'),(5,'croque monsieur'),(6,'pudding'),(7,'koeken'),(8,'macaroni');
 /*!40000 ALTER TABLE `gerecht` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,7 +140,7 @@ CREATE TABLE `gerechtproduct` (
 
 LOCK TABLES `gerechtproduct` WRITE;
 /*!40000 ALTER TABLE `gerechtproduct` DISABLE KEYS */;
-INSERT INTO `gerechtproduct` VALUES (1,1,4,2,'KG'),(2,1,4,3,'L'),(3,2,4,3,'L'),(4,3,4,2,'L');
+INSERT INTO `gerechtproduct` VALUES (1,1,2,2,'KG'),(2,1,4,3,'L'),(3,2,3,3,'L'),(4,3,2,2,'L');
 /*!40000 ALTER TABLE `gerechtproduct` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,6 +153,7 @@ DROP TABLE IF EXISTS `prodger`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `prodger` AS SELECT 
+ 1 AS `idgerechtproduct`,
  1 AS `idproduct`,
  1 AS `idgerecht`,
  1 AS `naamprod`,
@@ -273,7 +247,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `prodger` AS select `product`.`idproduct` AS `idproduct`,`gerecht`.`idgerecht` AS `idgerecht`,`product`.`naamprod` AS `naamprod`,`gerecht`.`naamger` AS `naamger`,`gerechtproduct`.`hoeveelheid` AS `hoeveelheid`,`gerechtproduct`.`Eenheid` AS `eenheid` from ((`gerechtproduct` join `gerecht` on((`gerecht`.`idgerecht` = `gerechtproduct`.`idgerecht`))) join `product` on((`product`.`idproduct` = `gerechtproduct`.`idproduct`))) */;
+/*!50001 VIEW `prodger` AS select `gerechtproduct`.`idgerechtproduct` AS `idgerechtproduct`,`product`.`idproduct` AS `idproduct`,`gerecht`.`idgerecht` AS `idgerecht`,`product`.`naamprod` AS `naamprod`,`gerecht`.`naamger` AS `naamger`,`gerechtproduct`.`hoeveelheid` AS `hoeveelheid`,`gerechtproduct`.`Eenheid` AS `eenheid` from ((`gerechtproduct` join `gerecht` on((`gerecht`.`idgerecht` = `gerechtproduct`.`idgerecht`))) join `product` on((`product`.`idproduct` = `gerechtproduct`.`idproduct`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -287,4 +261,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-18 21:43:06
+-- Dump completed on 2020-04-20 22:23:00

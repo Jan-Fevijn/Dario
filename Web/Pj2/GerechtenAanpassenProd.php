@@ -4,8 +4,8 @@ include 'connectie.php';
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
   if (isset($_GET["naamproduct"])) {
 
-    $sql_tijd = "SELECT idproduct,naamprod FROM product WHERE naamprod = '" . $_GET["naamproduct"] . "'";
-    $result = $conn->query($sql_tijd);
+    $sql_prod = "SELECT idproduct,naamprod FROM product WHERE naamprod = '" . $_GET["naamproduct"] . "'";
+    $result = $conn->query($sql_prod);
 
     if ($result->num_rows > 0) {
       while($row = $result->fetch_assoc()){
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       }
 
       
-    $sql = "UPDATE gerechtproduct SET idproduct= '" . $_SESSION['ID']  ."' WHERE idgerecht=". $_SESSION["actief"] . "";
+    $sql = "UPDATE gerechtproduct SET idproduct= '" . $_SESSION['ID']  ."' WHERE idgerechtproduct=". $_SESSION["actief"] . "";
 
       if ($conn->query($sql) === TRUE) {
           
@@ -43,8 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <div class="inner">
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="overzicht.php">Home</a>
-        <a class="nav-link" href="evenementaanmaken.php">Evenement Aanmaken</a>
-        <a class="nav-link" href="gerechttoevoegen.php">Gerecht Toevoegen</a>
+        <a class="nav-link" href="evenementaanmaken.php">Evenement en gerechten Aanmaken</a>
         <a class="nav-link active" href="gerechtenaanpassenprod.php">Producten Aanpassen</a>
       </nav>
     </div>
@@ -74,9 +73,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
       <tr>
       <?php
-        if (isset($_GET["idgerecht"])) {
-          if ($_GET["idgerecht"] == $row["idgerecht"]) {
-            $_SESSION["actief"] = $row["idgerecht"];
+        if (isset($_GET["idgerechtproduct"])) {
+          if ($_GET["idgerechtproduct"] == $row["idgerechtproduct"]) {
+            $_SESSION["actief"] = $row["idgerechtproduct"];
         ?>
         <form action="gerechtenaanpassenprod.php" name="updatefrm" methode="GET">
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
@@ -85,14 +84,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         <?php 
           }else{
             ?>
-            <th scope="row"><a class="btn btn-outline-primary" href="?idgerecht=<?php echo $row["idproduct"] ?>">Aanpassen</a></th>
+            <th scope="row"><a class="btn btn-outline-primary" href="?idgerechtproduct=<?php echo $row["idgerechtproduct"] ?>">Aanpassen</a></th>
             <td><?php echo $row["naamprod"]; ?></td>
             <?php
 
           }
         }else {
         ?>
-        <th scope="row"><a class="btn btn-outline-primary" href="?idgerecht=<?php echo $row["idproduct"] ?>">Aanpassen</a></th>
+        <th scope="row"><a class="btn btn-outline-primary" href="?idgerechtproduct=<?php echo $row["idgerechtproduct"] ?>">Aanpassen</a></th>
         <td><?php echo $row["naamprod"]; ?></td>
         <?php
         }

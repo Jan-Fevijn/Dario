@@ -61,8 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <?php if (!isset($_SESSION["keuzetype"])) {?>
         <select name="keuzeinkomst" onchange="this.form.submit()">
             <option value="0"><-maak uw keuze -></option>
-            <option value="1">Inkomsten</option>
-            <option value="2">Uitgaven</option>
+            <option value="1">Gerechten</option>
         </select>
         <?php 
         } else {
@@ -84,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             <option ><- maak uw keuze -></option>
 <?php
 
-                $sql = "SELECT * FROM typeinkomsten;";
+                $sql = "SELECT * FROM prodger;";
 
                 $result = $conn->query($sql);
 
