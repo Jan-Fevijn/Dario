@@ -16,6 +16,53 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Temporary view structure for view `aankopen`
+--
+
+DROP TABLE IF EXISTS `aankopen`;
+/*!50001 DROP VIEW IF EXISTS `aankopen`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `aankopen` AS SELECT 
+ 1 AS `typebrood`,
+ 1 AS `prijs`,
+ 1 AS `datum`,
+ 1 AS `naam`,
+ 1 AS `voornaam`,
+ 1 AS `idklant`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `automaat`
+--
+
+DROP TABLE IF EXISTS `automaat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `automaat` (
+  `idAutomaat` int(11) NOT NULL AUTO_INCREMENT,
+  `locatie` int(11) NOT NULL,
+  `brood` int(11) NOT NULL,
+  `aantal` int(11) NOT NULL DEFAULT '0',
+  `datum` date DEFAULT NULL,
+  `prijs` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`idAutomaat`),
+  KEY `automaat_brood` (`brood`),
+  CONSTRAINT `automaat_brood` FOREIGN KEY (`brood`) REFERENCES `brood` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `automaat`
+--
+
+LOCK TABLES `automaat` WRITE;
+/*!40000 ALTER TABLE `automaat` DISABLE KEYS */;
+INSERT INTO `automaat` VALUES (7,1,2,3,'2020-04-22',3.50),(8,2,5,2,'2020-04-22',4.00),(9,3,4,4,'2020-04-22',5.00),(10,4,1,1,'2020-04-22',2.00),(11,5,3,1,'2020-04-22',3.00),(12,6,6,3,'2020-04-22',4.00);
+/*!40000 ALTER TABLE `automaat` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `brood`
 --
 
@@ -23,13 +70,10 @@ DROP TABLE IF EXISTS `brood`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `brood` (
-  `idBrood` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(45) NOT NULL,
-  `code` int(11) NOT NULL,
-  PRIMARY KEY (`idBrood`),
-  UNIQUE KEY `idBrood_UNIQUE` (`idBrood`),
-  UNIQUE KEY `code_UNIQUE` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `typeBrood` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +82,7 @@ CREATE TABLE `brood` (
 
 LOCK TABLES `brood` WRITE;
 /*!40000 ALTER TABLE `brood` DISABLE KEYS */;
+INSERT INTO `brood` VALUES (1,'bus melkwit'),(2,'bus wit'),(3,'bus tarwe'),(4,'boeren tarwe'),(5,'boeren tijger tarwe'),(6,'boeren mout');
 /*!40000 ALTER TABLE `brood` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -49,13 +94,14 @@ DROP TABLE IF EXISTS `klant`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `klant` (
-  `idklant` int(11) NOT NULL AUTO_INCREMENT,
-  `klantcode` int(11) NOT NULL,
-  `balans` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`idklant`),
-  UNIQUE KEY `idklant_UNIQUE` (`idklant`),
-  UNIQUE KEY `klantcode_UNIQUE` (`klantcode`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `idKlant` int(11) NOT NULL AUTO_INCREMENT,
+  `klantcode` varchar(10) NOT NULL,
+  `naam` varchar(45) NOT NULL,
+  `voornaam` varchar(45) NOT NULL,
+  `balans` decimal(5,2) NOT NULL,
+  PRIMARY KEY (`idKlant`),
+  UNIQUE KEY `klantcode` (`klantcode`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,6 +110,7 @@ CREATE TABLE `klant` (
 
 LOCK TABLES `klant` WRITE;
 /*!40000 ALTER TABLE `klant` DISABLE KEYS */;
+INSERT INTO `klant` VALUES (1,'1234','Decuypere','Dario',10.00),(2,'5678','Paudel','Rubin',12.00);
 /*!40000 ALTER TABLE `klant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -75,17 +122,16 @@ DROP TABLE IF EXISTS `transactie`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transactie` (
-  `idtransactie` int(11) NOT NULL AUTO_INCREMENT,
-  `idBrood` int(11) NOT NULL,
-  `idKlanten` int(11) NOT NULL,
-  `Prijs` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`idtransactie`),
-  UNIQUE KEY `idtransactie_UNIQUE` (`idtransactie`),
-  KEY `brood_idx` (`idBrood`),
-  KEY `klant_idx` (`idKlanten`),
-  CONSTRAINT `brood` FOREIGN KEY (`idBrood`) REFERENCES `brood` (`idBrood`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `klant` FOREIGN KEY (`idKlanten`) REFERENCES `klant` (`idklant`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `idTransactie` int(11) NOT NULL AUTO_INCREMENT,
+  `idAutomaat` int(11) NOT NULL,
+  `idKlant` int(11) NOT NULL,
+  `datum` date DEFAULT NULL,
+  PRIMARY KEY (`idTransactie`),
+  KEY `transactie_auto` (`idAutomaat`),
+  KEY `transactie_klant` (`idKlant`),
+  CONSTRAINT `transactie_auto` FOREIGN KEY (`idAutomaat`) REFERENCES `automaat` (`idAutomaat`),
+  CONSTRAINT `transactie_klant` FOREIGN KEY (`idKlant`) REFERENCES `klant` (`idKlant`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,8 +140,27 @@ CREATE TABLE `transactie` (
 
 LOCK TABLES `transactie` WRITE;
 /*!40000 ALTER TABLE `transactie` DISABLE KEYS */;
+INSERT INTO `transactie` VALUES (1,9,2,'2020-04-22'),(2,7,1,'2020-04-22'),(3,12,1,'2020-04-22');
 /*!40000 ALTER TABLE `transactie` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Final view structure for view `aankopen`
+--
+
+/*!50001 DROP VIEW IF EXISTS `aankopen`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `aankopen` AS select `brood`.`typeBrood` AS `typebrood`,`automaat`.`prijs` AS `prijs`,`transactie`.`datum` AS `datum`,`klant`.`naam` AS `naam`,`klant`.`voornaam` AS `voornaam`,`klant`.`idKlant` AS `idklant` from (((`transactie` join `automaat` on((`automaat`.`idAutomaat` = `transactie`.`idAutomaat`))) join `brood` on((`brood`.`id` = `automaat`.`brood`))) join `klant` on((`klant`.`idKlant` = `transactie`.`idKlant`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -106,4 +171,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-21 13:46:58
+-- Dump completed on 2020-04-22 21:40:49
