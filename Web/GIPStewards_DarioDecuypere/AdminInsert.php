@@ -3,8 +3,55 @@ include 'conn.php';
 ?>
 
 <?php
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["Soortinsert"])) {
+      $_SESSION["keuzeinsert"] = $_POST["soortinsert"];
+  }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
- if (isset($_GET["Steward"], $_GET["Tijd"], $_GET["Plaats"]) ){
+  if (isset($_GET["typeClear"])) {
+      $_SESSION["keuzeinsert"] = NULL;
+  }
+}
+
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["Stewardtoe"], $_POST["Tijdtoe"], $_POST["Plaatstoe"]) ){
+    $sql = "INSERT INTO evenmenten (naameve,dagen, aantal) VALUES ". $_POST["eveger"] . ",". $_POST["Dagen"] . ",". $_POST["Personen"] .")";
+
+    if ($conn->query($sql) === TRUE) {
+      header("location:evenementaanmaken.php");
+  } else {
+      echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+
+      $sql = "INSERT INTO gerecht (naamger) VALUES (". $_POST["eveger"] .")";
+
+      if ($conn->query($sql) === TRUE) {
+        header("location:evenementaanmaken.php");
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
+if (isset($_POST["Stewardbes"], $_POST["Tijdbes"], $_POST["Plaatsbes"]) ){
+  
+  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_POST["Steward"] . ",". $_POST["Tijd"] . ",". $_POST["Plaats"] ."')
+  SELECT idSteward, voornaam, naam, idTijd, Tijd, idPlaats, afkorting From steward
+  JOIN tijd on idTijd = idTijd
+  JOIN plaats on idPlaats = idPlaats";
+
+  if ($conn->query($sql) === TRUE) {
+    echo "gelukt!";
+    header("location:admin.php");
+  }
+}
+}
 
   //$sql_select = "SELECT idSteward,voornaam,naam FROM steward Where idSteward = '" . $_GET["Steward"] . "'";
   //$sql_select = "SELECT idTijd,Tijd FROM tijd Where idTijd = '" . $_GET["Tijd"] . "'";
@@ -22,19 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
   //} else {
     //echo "niet gevonden";
   //}*
-
-
-  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_GET["Steward"] . ",". $_GET["Tijd"] . ",". $_GET["Plaats"] ."')
-  SELECT idSteward, voornaam, naam, idTijd, Tijd, idPlaats, afkorting From steward
-  JOIN tijd on idTijd = idTijd
-  JOIN plaats on idPlaats = idPlaats";
-
-  if ($conn->query($sql) === TRUE) {
-    echo "gelukt!";
-    header("location:admin.php");
-  }
-}
-}
 ?>
             
 <!DOCTYPE html>
@@ -53,24 +87,65 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <div class="inner">
       <nav class="nav nav-masthead justify-content-center">
       <a class="nav-link" href="admin.php">Admin</a>
-        <a class="nav-link" href="adminupdateTijd.php">Update Tijd</a>
-        <a class="nav-link" href="adminupdatePlaats.php">Update Plaats</a>
+        <a class="nav-link" href="adminupdate.php">Update Tijd</a>
         <a class="nav-link active" href="admininsert.php">Personen Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>
-  <form action="AdminInsert.php" method="GET" class="Toevoegen">
-  <label class="Tijd">Steward:</label>
-  <input type="text" name="Steward" placeholder="Steward" class="input">
-  <br>
-  <label class="Dag">Tijd:</label>
-  <input type="text" name="Tijd" placeholder="Tijd" class="input">
-  <br>
-  <label class="Plaats">Plaats:</label>
-  <input type="text" name="Plaats" placeholder="Plaats" class="input">
-  <br>
-  <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
+
+  <div id="container" class="container">
+  <form action="Admininsert.php" name="nieuw" method="POST">
+    <?php if (!isset($_SESSION["keuzeinsert"])) {?>
+        <select name="Soortinsert" onchange="this.form.submit()">
+            <option value = 0><-maak uw keuze -></option>
+            <option value = 1>Nieuwe steward toevoegen</option>
+            <option value = 2>Nieuwe shift toevoegen</option>
+        </select>
+        <?php 
+        } else {
+            switch ($_SESSION["keuzeinsert"]) {
+                case 1:
+                    echo "<p>Steward toevoegen <a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
+                    break;
+                case 2:
+                    echo "<p>shift toevoegen <a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
+                    break;
+                  }
+        ?>
+            <?php
+            switch ($_SESSION["keuzeinsert"]) {
+              case 1:
+            ?>
+                    <label class="Tijd">Steward Toevoegen:</label>
+                    <input type="text" name="Stewardtoe" placeholder="Steward" class="input">
+                    <br>
+                    <label class="Dag">Tijd:</label>
+                    <input type="text" name="Tijdtoe" placeholder="Tijd" class="input">
+                    <br>
+                    <label class="Plaats">Plaats:</label>
+                    <input type="text" name="Plaatstoe" placeholder="Plaats" class="input">
+                    <br>
+                    <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
+                    <?php break;?>
+            <?php
+              case 2:
+            ?>
+                <label class="Tijd"> bestaande Steward:</label>
+                    <input type="text" name="Stewardbes" placeholder="Steward" class="input">
+                    <br>
+                    <label class="Dag">Tijd:</label>
+                    <input type="text" name="Tijdbes" placeholder="Tijd" class="input">
+                    <br>
+                    <label class="Plaats">Plaats:</label>
+                    <input type="text" name="Plaatsbes" placeholder="Plaats" class="input">
+                    <br>
+                    <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
+                    <?php break;?>
+        <?php
+            }
+            }
+        ?>
 </div>
 </body>
 </html>

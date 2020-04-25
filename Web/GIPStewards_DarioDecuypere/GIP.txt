@@ -3,13 +3,22 @@
 --------------------------------------------------------------------------------------
 
 
-{- google login
 
-- notificatie systeem}
+- notificatie systeem
+
+- insert (foutje met idsteward met select)
+
+- dropdown (updates)
+
+- login met md5 (week 27/04)
 
 
--insert (raar)
+--
 
 - Algemene site op punt stellen(laatste)
+
+
+
+--
 
 -VB personen toevoegen(kan nu niet)

@@ -33,8 +33,7 @@ function filterTable($query, $conn)
     <div class="inner">
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link active" href="admin.php">Admin</a>
-        <a class="nav-link" href="adminupdateTijd.php">Update Tijd</a>
-        <a class="nav-link" href="adminupdatePlaats.php">Update Plaats</a>
+        <a class="nav-link" href="adminupdate.php">Update Tijd</a>
         <a class="nav-link" href="admininsert.php">Personen Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
