@@ -1,5 +1,22 @@
 <?php
 include 'conn.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["positie"])){
+
+    $lc = $_POST["positie"];
+    $sql = "SELECT * FROM overzichtbroden WHERE positie = '". $lc ."'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+        //weet niet hoe ik een bestaand record (in dit geval aantaIn en Prijs) moet verminderen met een aangegeven waarde of met prijs -> de prijs - saldo ik begrijp het niet
+      }
+  } else {
+
+  }
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +27,7 @@ include 'conn.php';
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <html>
 <head>
-    <title>overzicht</title>
+    <title>kopen</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -25,14 +42,14 @@ include 'conn.php';
       </li>
       <?php
     if (isset($_SESSION["loggedIn"])){
-        $sql_balans = "SELECT balans from klant where idklant = ". $_SESSION["loggedIn"] ."";
+        $sql_balans = "SELECT saldo from saldo where idklant = ". $_SESSION["loggedIn"] ."";
         $resultaat = $conn->query($sql_balans);
             
                     if ($resultaat->num_rows > 0) {
                         while($row = $resultaat->fetch_assoc()){
 ?>
     <li class="nav-item">
-        <a class="nav-link"><?php echo "€" . $row["balans"];?></a>
+        <a class="nav-link"><?php echo "€" . $row["saldo"];?></a>
     </li>
 <?php
                         }
@@ -47,18 +64,24 @@ include 'conn.php';
 </nav>
 
 <main role="main" class="container">
+
+<form action="kopenbrood.php" method="POST">
+  <label>Geef positie van brood:</label>
+  <input type="text" name="positie" placeholder="positie" required>
+  <p><button type="submit">Submit</button></p>
+</form>
+
 <table>
 			    <tr>
                     <th>brood</th>
                     <th>prijs</th>
-                    <th>datum</th>
-                    <th>Naam</th>
-                    <th>Voornaam</th>
+                    <th>positie</th>
+                    <th>Aantal</th>
 			    </tr>
                 <?php 
                 if (isset($_SESSION["loggedIn"])){
 
-			        $sql_data = "SELECT * from aankopen WHERE idklant = ". $_SESSION["loggedIn"] ."";
+			        $sql_data = "SELECT * from overzichtbroden";
 
 
                     $resultaat = $conn->query($sql_data);
@@ -67,8 +90,7 @@ include 'conn.php';
             
             
                         while($row = $resultaat->fetch_assoc()){
-                            echo "<tr><td>" . $row["typebrood"] . "</td><td>" . $row["prijs"] . "</td><td>" . $row["datum"] . "</td>
-                            <td>" . $row["naam"] . "</td><td>" . $row["voornaam"] . "</td></tr>"; 
+                            echo "<tr><td>" . $row["broodnaam"] . "</td><td>". $row["kostprijs"] . "</td><td>" . $row["positie"] . "</td><td>" . $row["aantalIn"] . "</td></tr>"; 
                         }
                         echo "</table>";
                     }

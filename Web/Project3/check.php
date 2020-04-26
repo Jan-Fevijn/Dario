@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $code = strip_tags(mysqli_real_escape_string($conn, trim($code)));
             
-            $sql_controleCode = "SELECT idklant, klantcode FROM klant WHERE klantcode = '" . $code . "'";
+            $sql_controleCode = "SELECT idklant, code FROM klant WHERE code = '" . $code . "'";
             $result = $conn->query($sql_controleCode);
 
             if ($result->num_rows > 0) {

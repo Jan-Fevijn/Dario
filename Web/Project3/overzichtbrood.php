@@ -10,7 +10,7 @@ include 'conn.php';
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <html>
 <head>
-    <title>kopen</title>
+    <title>overzicht</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -25,14 +25,14 @@ include 'conn.php';
       </li>
       <?php
     if (isset($_SESSION["loggedIn"])){
-        $sql_balans = "SELECT balans from klant where idklant = ". $_SESSION["loggedIn"] ."";
+        $sql_balans = "SELECT saldo from saldo where idklant = ". $_SESSION["loggedIn"] ."";
         $resultaat = $conn->query($sql_balans);
             
                     if ($resultaat->num_rows > 0) {
                         while($row = $resultaat->fetch_assoc()){
 ?>
     <li class="nav-item">
-        <a class="nav-link"><?php echo "€" . $row["balans"];?></a>
+        <a class="nav-link"><?php echo "€" . $row["saldo"];?></a>
     </li>
 <?php
                         }
@@ -47,7 +47,38 @@ include 'conn.php';
 </nav>
 
 <main role="main" class="container">
+<table>
+			    <tr>
+                    <th>brood</th>
+                    <th>prijs</th>
+                    <th>datum</th>
+                    <th>code</th>
+			    </tr>
+                <?php 
+                if (isset($_SESSION["loggedIn"])){
 
+			        $sql_data = "SELECT * from aankopen WHERE idklant = ". $_SESSION["loggedIn"] ."";
+
+
+                    $resultaat = $conn->query($sql_data);
+            
+                    if ($resultaat->num_rows > 0) {
+            
+            
+                        while($row = $resultaat->fetch_assoc()){
+                            echo "<tr><td>" . $row["broodnaam"] . "</td><td>". "-" . $row["kostprijs"] . "</td><td>" . $row["datum"] . "</td>
+                            <td>" . $row["code"] . "</td></tr>"; 
+                        }
+                        echo "</table>";
+                    }
+                    else{
+                        if ($debug) echo "geen resultaat";
+                    }
+                  }
+
+                         $conn->Close();
+			    ?>
+            </table>
 </main>
 </body>
 </html>
