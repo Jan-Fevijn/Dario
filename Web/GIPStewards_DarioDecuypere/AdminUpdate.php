@@ -14,25 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["dag"])) {
         $_SESSION["keuzedag"] = $_POST["dag"];
     }
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    if (isset($_GET["typeClear"])) {
-        $_SESSION["Keuze"] = NULL;
-        $_SESSION["keuzepersoon"] = NULL;
-    }
-  
-    if (isset($_GET["KeuzeClear"])){
-        $_SESSION["keuzepersoon"] = NULL;
-        $_SESSION["keuzedag"] = NULL;
-    }
-  }
 
 
-
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    switch ($_SESSION["keuze"]) {
-        case 1:
     if (isset($_POST["tijd"])) {
   
       $sql_tijd = "SELECT idTijd,Tijd FROM tijd WHERE Tijd = '" . $_POST["tijd"] . "'";
@@ -56,9 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             echo "fout bij het aanpassen: " . $conn->error;
         }
     }
-break;
   
-  case 2:
     if (isset($_POST["afkorting"])) {
   
       $sql_tijd = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_POST["Plaats"] . "'";
@@ -81,8 +62,19 @@ break;
             echo "fout bij het aanpassen: " . $conn->error;
         }
     }
-break;
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    if (isset($_GET["typeClear"])) {
+        $_SESSION["Keuze"] = NULL;
+        $_SESSION["keuzepersoon"] = NULL;
+        $_SESSION["keuzeplaats"] = NULL;
+    }
+  
+    if (isset($_GET["KeuzeClear"])){
+        $_SESSION["keuzepersoon"] = NULL;
+        $_SESSION["keuzedag"] = NULL;
+    }
   }
 ?>
       
@@ -94,7 +86,7 @@ break;
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="CSS/adminupcss.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>UpdateTijd</title>
+    <title>Update</title>
 </head>
 <body>
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -102,7 +94,7 @@ break;
     <div class="inner">
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="admin.php">Admin</a>
-        <a class="nav-link active" href="adminupdate.php">Update Tijd</a>
+        <a class="nav-link active" href="adminupdate.php">Update shifts</a>
         <a class="nav-link" href="admininsert.php">Personen Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
@@ -110,12 +102,11 @@ break;
   </header>
 
   <div id="container" class="container">
-  <form action="AdminUpdate.php" name="nieuw" method="POST">
-    <?php if (!isset($_SESSION["keuze"])) {?>
-        <select name="Soortupdate" onchange="this.form.submit()">
+  <form action="AdminUpdate.php" name="tijd" method="POST">
+    <?php if (!isset($_SESSION["keuzetijd"])) {?>
+        <select name="updatetijd" onchange="this.form.submit()">
             <option value = 0><-maak uw keuze -></option>
-            <option value = 1>Update Tijd</option>
-            <option value = 2>Update Plaats</option>
+            <option value = 1><br></option>
         </select>
         <?php 
         } else {
@@ -228,6 +219,32 @@ break;
         }
 ?>
     </form>
+
+    <div id="container" class="container">
+  <form action="AdminUpdate.php" name="plaats" method="POST">
+    <?php if (!isset($_SESSION["keuzeplaats"])) {?>
+
+      <?php
+      $sql = "SELECT idsteward, Voornaam, Naam FROM steward";
+      $result = $conn->query($sql);
+  
+        if ($result->num_rows > 0) {
+      ?>
+
+        <select name="updateplaats" onchange="this.form.submit()">
+            <option value = 0><-maak uw keuze -></option>
+            <?php while($row = $result->fetch_assoc()){ ?>
+            <option value = 1><?php echo $row["Voornaam"] . $row["Naam"];?></option>
+            </select>
+            <?php
+                  }
+                  }
+                    else {
+                      echo "niet gevonden";
+                    }
+                    echo "<p>". $row["Voornaam"] . $row["Naam"]  . "<a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
+                  }
+            ?>
 </div>
 </body>
 </html>

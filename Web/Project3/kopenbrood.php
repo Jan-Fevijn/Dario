@@ -1,20 +1,38 @@
 <?php
 include 'conn.php';
+$date = date('m/d/Y h:i:s a', time());
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (isset($_POST["positie"])){
 
-    $lc = $_POST["positie"];
-    $sql = "SELECT * FROM overzichtbroden WHERE positie = '". $lc ."'";
+    $sql = "SELECT sum(saldo) from saldo
+    where idklant = ". $_SESSION["loggedIn"] ."";
+
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
       while($row = $result->fetch_assoc()){
-        //weet niet hoe ik een bestaand record (in dit geval aantaIn en Prijs) moet verminderen met een aangegeven waarde of met prijs -> de prijs - saldo ik begrijp het niet
+        
       }
   } else {
 
   }
+
+    $sql_aantal = "SELECT sum(totaal) from (select aantalIn as totaal from broodpositiedatum 
+    where datum = $date and broodpositiedatum.positie = ". $_POST["positie"] ."
+    union
+    SELECT (-1 * count(broodpositiedatum)) as totaal
+    from saldo where datum = $date) as a";
+
+    $result = $conn->query($sql_aantal);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+        echo "test";
+      }
+    } else {
+
+    }
   }
 }
 ?>

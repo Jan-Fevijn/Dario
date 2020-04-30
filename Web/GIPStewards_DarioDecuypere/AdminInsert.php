@@ -7,7 +7,7 @@ include 'conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (isset($_POST["Soortinsert"])) {
-      $_SESSION["keuzeinsert"] = $_POST["soortinsert"];
+      $_SESSION["keuzeinsert"] = $_POST["Soortinsert"];
   }
 }
 
@@ -18,10 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 }
 
 
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (isset($_POST["Stewardtoe"], $_POST["Tijdtoe"], $_POST["Plaatstoe"]) ){
+  switch ($_SESSION["keuzeinsert"]) {
+    case 1:
     $sql = "INSERT INTO evenmenten (naameve,dagen, aantal) VALUES ". $_POST["eveger"] . ",". $_POST["Dagen"] . ",". $_POST["Personen"] .")";
 
     if ($conn->query($sql) === TRUE) {
@@ -29,19 +28,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
   }
+  break;
 
-      $sql = "INSERT INTO gerecht (naamger) VALUES (". $_POST["eveger"] .")";
+  case 2:
+    $sql = "SELECT idsteward, Voornaam, Naam FROM steward WHERE Voornaam = '" . $_POST["Stewardbes"] . "' or Naam = '" . $_POST["Stewardbes"] . "'";
+    $result = $conn->query($sql);
 
-      if ($conn->query($sql) === TRUE) {
-        header("location:evenementaanmaken.php");
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+          $_SESSION['IDsteward'] = $row['idSteward'];
+      }
     }
-}
+      else {
+        echo "stewardid niet gevonden";
+      }
 
-if (isset($_POST["Stewardbes"], $_POST["Tijdbes"], $_POST["Plaatsbes"]) ){
-  
-  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_POST["Steward"] . ",". $_POST["Tijd"] . ",". $_POST["Plaats"] ."')
+
+  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDstewardnieuw'] . ",". $_SESSION['IDTijdnieuw'] . ",". $_SESSION['IDPlaatsnieuw'] ."')
   SELECT idSteward, voornaam, naam, idTijd, Tijd, idPlaats, afkorting From steward
   JOIN tijd on idTijd = idTijd
   JOIN plaats on idPlaats = idPlaats";
@@ -50,6 +53,7 @@ if (isset($_POST["Stewardbes"], $_POST["Tijdbes"], $_POST["Plaatsbes"]) ){
     echo "gelukt!";
     header("location:admin.php");
   }
+break;
 }
 }
 
@@ -87,7 +91,7 @@ if (isset($_POST["Stewardbes"], $_POST["Tijdbes"], $_POST["Plaatsbes"]) ){
     <div class="inner">
       <nav class="nav nav-masthead justify-content-center">
       <a class="nav-link" href="admin.php">Admin</a>
-        <a class="nav-link" href="adminupdate.php">Update Tijd</a>
+        <a class="nav-link" href="adminupdate.php">Update</a>
         <a class="nav-link active" href="admininsert.php">Personen Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
@@ -117,11 +121,14 @@ if (isset($_POST["Stewardbes"], $_POST["Tijdbes"], $_POST["Plaatsbes"]) ){
             switch ($_SESSION["keuzeinsert"]) {
               case 1:
             ?>
-                    <label class="Tijd">Steward Toevoegen:</label>
+                    <label class="steward">Steward Toevoegen:</label>
                     <input type="text" name="Stewardtoe" placeholder="Steward" class="input">
                     <br>
-                    <label class="Dag">Tijd:</label>
+                    <label class="tijd">Tijd:</label>
                     <input type="text" name="Tijdtoe" placeholder="Tijd" class="input">
+                    <br>
+                    <label class="Dag">Dag:</label>
+                    <input type="text" name="Dagtoe" placeholder="Dag" class="input">
                     <br>
                     <label class="Plaats">Plaats:</label>
                     <input type="text" name="Plaatstoe" placeholder="Plaats" class="input">
