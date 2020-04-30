@@ -1,81 +1,54 @@
 <?php
 include 'conn.php';
 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["Soortupdate"])) {
-        $_SESSION["Keuze"] = $_POST["Soortupdate"];
-    }
-  
-    if (isset($_POST["NaamPersoon"])) {
-        $_SESSION["keuzepersoon"] = $_POST["NaamPersoon"];
-    }
-
-    if (isset($_POST["dag"])) {
-        $_SESSION["keuzedag"] = $_POST["dag"];
-    }
-
-
-    if (isset($_POST["tijd"])) {
-  
-      $sql_tijd = "SELECT idTijd,Tijd FROM tijd WHERE Tijd = '" . $_POST["tijd"] . "'";
-      $result = $conn->query($sql_tijd);
-  
-      if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()){
-            $_SESSION['IDtijd'] = $row['idTijd'];
-        }
-      }
-        else {
-          echo "niet gevonden";
-        }
-  
-        
-      $sql = "UPDATE shift SET idTijd= '" . $_SESSION['IDtijd']  ."' WHERE idSteward=". $_SESSION["loggedin"] . "";
-  
-        if ($conn->query($sql) === TRUE) {
-            
-        } else {
-            echo "fout bij het aanpassen: " . $conn->error;
-        }
-    }
-  
-    if (isset($_POST["afkorting"])) {
-  
-      $sql_tijd = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_POST["Plaats"] . "'";
-      $result = $conn->query($sql_tijd);
-  
-      if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()){
-            $_SESSION['IDplaats'] = $row['idPlaats'];
-        }
-      }
-        else {
-          echo "niet gevonden";
-        }
-  
-        $sql = "UPDATE shift SET idPlaats= '" . $_SESSION['IDplaats']  ."' WHERE idSteward = ". $_SESSION["loggedin"] . "";
-  
-        if ($conn->query($sql) === TRUE) {
-            
-        } else {
-            echo "fout bij het aanpassen: " . $conn->error;
-        }
-    }
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    if (isset($_GET["typeClear"])) {
-        $_SESSION["Keuze"] = NULL;
-        $_SESSION["keuzepersoon"] = NULL;
-        $_SESSION["keuzeplaats"] = NULL;
+  if (isset($_GET["Tijd"])) {
+
+    $sql_tijd = "SELECT idTijd,Tijd FROM tijd WHERE Tijd = '" . $_GET["Tijd"] . "'";
+    $result = $conn->query($sql_tijd);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+          $_SESSION['ID'] = $row['idTijd'];
+      }
     }
-  
-    if (isset($_GET["KeuzeClear"])){
-        $_SESSION["keuzepersoon"] = NULL;
-        $_SESSION["keuzedag"] = NULL;
-    }
+      else {
+        echo "niet gevonden";
+      }
+
+      
+    $sql = "UPDATE shift SET idTijd= '" . $_SESSION['ID']  ."' WHERE idSteward=". $_SESSION["LoggedIn"] . "";
+
+      if ($conn->query($sql) === TRUE) {
+          
+      } else {
+          echo "fout bij het aanpassen: " . $conn->error;
+      }
   }
+
+  if (isset($_GET["afkorting"])) {
+
+    $sql_tijd = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_GET["afkorting"] . "'";
+    $result = $conn->query($sql_tijd);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+          $_SESSION['ID'] = $row['idPlaats'];
+      }
+    }
+      else {
+        echo "niet gevonden";
+      }
+
+      $sql = "UPDATE shift SET idPlaats= '" . $_SESSION['ID']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
+
+      if ($conn->query($sql) === TRUE) {
+          
+      } else {
+          echo "fout bij het aanpassen: " . $conn->error;
+      }
+  }
+}
 ?>
       
 <!DOCTYPE html>
@@ -86,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="CSS/adminupcss.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Update</title>
+    <title>UpdateTijd</title>
 </head>
 <body>
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -94,157 +67,138 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     <div class="inner">
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="admin.php">Admin</a>
-        <a class="nav-link active" href="adminupdate.php">Update shifts</a>
-        <a class="nav-link" href="admininsert.php">Personen Toevoegen</a>
+        <a class="nav-link active" href="adminupdatetijd.php">Update</a>
+        <a class="nav-link" href="admininsert.php">Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>
 
+<!-- Update van tijd -->
+
   <div id="container" class="container">
-  <form action="AdminUpdate.php" name="tijd" method="POST">
-    <?php if (!isset($_SESSION["keuzetijd"])) {?>
-        <select name="updatetijd" onchange="this.form.submit()">
-            <option value = 0><-maak uw keuze -></option>
-            <option value = 1><br></option>
-        </select>
-        <?php 
-        } else {
-          
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Tijd</th>
+        <th scope="col">Voornaam</th>
+        <th scope="col">Naam</th>
+        <th scope="col">Dag</th>
+        <th scope="col">Plaats</th>
+      </tr>
+    </thead>
+    <tbody>
 
-            switch ($_SESSION["keuze"]) {
-                case 1:
-                    echo "<p>Update Tijd <a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
-                    break;
-                case 2:
-                    echo "<p>Update Plaats <a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
-                    break;
-            }
+    <?php 
+    $sql = "SELECT * FROM stewardsinfo";
 
-            if (!isset($_SESSION["keuzepersoon"])){
-?>
-            <select name="NaamPersoon" onchange="this.form.submit()">
-            <option ><- maak uw keuze -></option>
-<?php
-            switch ($_SESSION["keuze"]) {
-                case 1:
-                $sql = "SELECT * FROM steward;";
+    $result = $conn->query($sql);
 
-                $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {     
+    ?>
 
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {     
-                        echo "<option value='".$row["idSteward"]."'>" . $row["Voornaam"]. $row["Naam"].  "</option>";
-                    }
-                }
-            break;
-
-            case 2:
-                $sql = "SELECT * FROM steward;";
-
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {     
-                        echo "<option value='".$row["idSteward"]."'>" . $row["Voornaam"]. $row["Naam"].  "</option>";
-                    }
-                }
-            break;
-            }
-?>
-            </select>
-<?php
-            }else{
-
-                echo "<p>". $row["Voornaam"] . $row["Naam"] ." <a class='btn btn-outline-primary' href='?KeuzeClear=1'>CLEAR</a></p>";
-
-                if (!isset($_SESSION["keuzedag"])){
-?>
-
-
-            <select name="dag" onchange="this.form.submit()">
-            <option ><- maak uw keuze -></option>
-<?php
-            switch ($_SESSION["keuze"]) {
-              case 1:
-                $sql = "SELECT * FROM tijd;";
-
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {    
-                        echo "<option value='".$row["idTijd"]."'>" .$row["dag"]. "</option>";
-                    }
-                }
-                  break;
-              case 2:
-                $sql = "SELECT * FROM tijd;";
-
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {    
-                        echo "<option value='".$row["idTijd"]."'>" .$row["dag"]. "</option>";
-                    }
-                }
-                  break;
-          }
-?>
-            </select>
-<?php
-            } else{
-
-                echo "<p>". $row["dag"] . " <a class='btn btn-outline-primary' href='?KeuzeClear=1'>CLEAR</a></p>";
-?>
-<?php
-            switch ($_SESSION["keuze"]) {
-              case 1:
-?>
-              <p> <span>Tijd: </span><input type="text" name="tijd"></p>
-                <p><input type="submit" name="compleettijd" value="verzenden"></p>
-                <?php break;?>
-
-            <?php
-              case 2:
-            ?>
-               <p> <span>Plaats: </span><input type="text" name="plaats"></p>
-                <p><input type="submit" name="compleetplaats" value="verzenden"></p>
-              <?php break;?>
-<?php
-    }
-?>
-<?php
-            }
-            }
-        }
-?>
-    </form>
-
-    <div id="container" class="container">
-  <form action="AdminUpdate.php" name="plaats" method="POST">
-    <?php if (!isset($_SESSION["keuzeplaats"])) {?>
-
+      <tr>
       <?php
-      $sql = "SELECT idsteward, Voornaam, Naam FROM steward";
-      $result = $conn->query($sql);
-  
-        if ($result->num_rows > 0) {
-      ?>
-
-        <select name="updateplaats" onchange="this.form.submit()">
-            <option value = 0><-maak uw keuze -></option>
-            <?php while($row = $result->fetch_assoc()){ ?>
-            <option value = 1><?php echo $row["Voornaam"] . $row["Naam"];?></option>
-            </select>
-            <?php
-                  }
-                  }
-                    else {
-                      echo "niet gevonden";
-                    }
-                    echo "<p>". $row["Voornaam"] . $row["Naam"]  . "<a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
-                  }
+        if (isset($_GET["idSteward"])) {
+          if ($_GET["idSteward"] == $row["idSteward"]) {
+            $_SESSION["LoggedIn"] = $row["idSteward"];
+        ?>
+        <form action="AdminUpdate.php" name="updatefrm" methode="GET">
+        <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
+        <td><input type="text" name="Tijd" value="<?php echo $row["Tijd"]; ?>"></td>
+        </form>
+        <?php 
+          }else{
             ?>
+            <th scope="row"><a class="btn btn-outline-primary" href="?idSteward=<?php echo $row["idSteward"] ?>">Aanpassen</a></th>
+            <td><?php echo $row["Tijd"]; ?></td>
+            <?php
+
+          }
+        }else {
+        ?>
+        <th scope="row"><a class="btn btn-outline-primary" href="?idSteward=<?php echo $row["idSteward"] ?>">Aanpassen</a></th>
+        <td><?php echo $row["Tijd"]; ?></td>
+        <?php
+        }
+        ?>
+        <td><?php echo $row["Voornaam"]; ?></td>
+        <td><?php echo $row["Naam"]; ?></td>
+        <td><?php echo $row["Dag"]; ?></td>
+        <td><?php echo $row["afkorting"]; ?></td>
+      </tr>
+
+  <?php 
+        }
+      }
+  ?>
+    </tbody>
+  </table>
+
+
+<!-- Update van plaats -->
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Plaats</th>
+        <th scope="col">Voornaam</th>
+        <th scope="col">Naam</th>
+        <th scope="col">Dag</th>
+        <th scope="col">Tijd</th>
+      </tr>
+    </thead>
+
+  <tbody>
+
+    <?php 
+    $sql = "SELECT * FROM stewardsinfo";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {     
+    ?>
+
+      <tr>
+      <?php
+        if (isset($_GET["idSteward"])) {
+          if ($_GET["idSteward"] == $row["idSteward"]) {
+            $_SESSION["LoggedIn"] = $row["idSteward"];
+        ?>
+        <form action="AdminUpdate.php" name="updatefrm" methode="GET">
+        <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
+        <td><input type="text" name="afkorting" value="<?php echo $row["afkorting"]; ?>"></td>
+        </form>
+        <?php 
+          }else{
+            ?>
+            <th scope="row"><a class="btn btn-outline-primary" href="?idSteward=<?php echo $row["idSteward"] ?>">Aanpassen</a></th>
+            <td><?php echo $row["afkorting"]; ?></td>
+            <?php
+
+          }
+        }else {
+        ?>
+        <th scope="row"><a class="btn btn-outline-primary" href="?idSteward=<?php echo $row["idSteward"] ?>">Aanpassen</a></th>
+        <td><?php echo $row["afkorting"]; ?></td>
+        <?php
+        }
+        ?>
+        <td><?php echo $row["Voornaam"]; ?></td>
+        <td><?php echo $row["Naam"]; ?></td>
+        <td><?php echo $row["Dag"]; ?></td>
+        <td><?php echo $row["Tijd"]; ?></td>
+      </tr>
+
+  <?php 
+        }
+      }
+  ?>
+    </tbody>
+  </table>
 </div>
 </body>
 </html>

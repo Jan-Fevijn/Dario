@@ -83,6 +83,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <main role="main" class="container">
 
+<?php
+  $sql = "SELECT datum FROM broodpositiedatum";
+  $result = $conn->query($sql);
+
+  if ($result->num_rows > 0) {
+?>
+
+<form action="kopenbrood.php" name="koop" method="POST">
+    <?php if (!isset($_SESSION["keuzedatum"])) {?>
+        <select name="datum" onchange="this.form.submit()">
+            <option value = 0><-maak uw keuze -></option>
+            <?php  
+              while($row = $result->fetch_assoc()){
+            ?>
+            <option value = 1 name="datum"><?php echo $row["datum"]?></option>
+        </select>
+<?php
+   }
+  }
+  }
+    else {
+      echo "geen datums gevonden";
+    }
+?>
+
+
 <form action="kopenbrood.php" method="POST">
   <label>Geef positie van brood:</label>
   <input type="text" name="positie" placeholder="positie" required>
