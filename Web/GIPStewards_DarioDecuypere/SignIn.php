@@ -14,6 +14,7 @@ function checkLogIn() {
     }
     } else {
         header("location: index.php");
+        $_SESSION["fout"] = "U wachtwoord of gebruikersnaam is incorrect!";
     }
     
 }

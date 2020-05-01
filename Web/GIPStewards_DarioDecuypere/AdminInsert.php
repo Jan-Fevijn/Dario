@@ -1,4 +1,4 @@
-<?php
+ <?php
 include 'conn.php';
 ?>
 
@@ -92,7 +92,7 @@ break;
       <nav class="nav nav-masthead justify-content-center">
       <a class="nav-link" href="admin.php">Admin</a>
         <a class="nav-link" href="adminupdate.php">Update</a>
-        <a class="nav-link active" href="admininsert.php">Personen Toevoegen</a>
+        <a class="nav-link active" href="admininsert.php">Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>

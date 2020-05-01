@@ -22,6 +22,14 @@ include 'conn.php';
   <input type="password" name="Wachtwoord" class="form-control" placeholder="Wachtwoord" required>
 
   <button class="btn btn-lg btn-primary btn-block" type="submit">Inloggen</button>
+  <br>
+
+<?php if (isset($_SESSION["fout"])){?>
+  <p class="font-weight-bold"><?php echo $_SESSION["fout"] ?>!</p>
+<?php
+unset($_SESSION["fout"]);
+}  
+?>
 </form>
 </body>
 </html>

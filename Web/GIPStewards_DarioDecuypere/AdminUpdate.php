@@ -17,9 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       }
 
       
-    $sql = "UPDATE shift SET idTijd= '" . $_SESSION['ID']  ."' WHERE idSteward=". $_SESSION["LoggedIn"] . "";
+    $sql_update_tijd = "UPDATE shift SET idTijd= '" . $_SESSION['ID']  ."' WHERE idSteward=". $_SESSION["LoggedIn"] . "";
 
-      if ($conn->query($sql) === TRUE) {
+      if ($conn->query($sql_update_tijd) === TRUE) {
           
       } else {
           echo "fout bij het aanpassen: " . $conn->error;
@@ -28,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
   if (isset($_GET["afkorting"])) {
 
-    $sql_tijd = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_GET["afkorting"] . "'";
-    $result = $conn->query($sql_tijd);
+    $sql_plaats = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_GET["afkorting"] . "'";
+    $result = $conn->query($sql_plaats);
 
     if ($result->num_rows > 0) {
       while($row = $result->fetch_assoc()){
@@ -40,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         echo "niet gevonden";
       }
 
-      $sql = "UPDATE shift SET idPlaats= '" . $_SESSION['ID']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
+      $sql_update_plaats = "UPDATE shift SET idPlaats= '" . $_SESSION['ID']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
 
-      if ($conn->query($sql) === TRUE) {
+      if ($conn->query($sql_update_plaats) === TRUE) {
           
       } else {
           echo "fout bij het aanpassen: " . $conn->error;
@@ -77,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 <!-- Update van tijd -->
 
   <div id="container" class="container">
+  <h2>Tijd veranderen</h2>
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -105,9 +106,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           if ($_GET["idSteward"] == $row["idSteward"]) {
             $_SESSION["LoggedIn"] = $row["idSteward"];
         ?>
+
         <form action="AdminUpdate.php" name="updatefrm" methode="GET">
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
-        <td><input type="text" name="Tijd" value="<?php echo $row["Tijd"]; ?>"></td>
+        <td>
+        <select name="tijd" onchange="this.form.submit()">
+            <option value = 0><-maak uw keuze-></option>
+            <option value= 1 name="Tijd"><?php echo $row["Tijd"];?></option>
+        </select>
+        </td>
         </form>
         <?php 
           }else{
@@ -139,6 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 
 <!-- Update van plaats -->
+
+<h2>Plaats veranderen</h2>
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -169,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $_SESSION["LoggedIn"] = $row["idSteward"];
         ?>
         <form action="AdminUpdate.php" name="updatefrm" methode="GET">
-        <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
+        <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[1].submit();return false;" href="#">UPDATE</a> </th>
         <td><input type="text" name="afkorting" value="<?php echo $row["afkorting"]; ?>"></td>
         </form>
         <?php 

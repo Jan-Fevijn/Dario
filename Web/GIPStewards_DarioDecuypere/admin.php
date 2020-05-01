@@ -34,21 +34,23 @@ function filterTable($query, $conn)
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link active" href="admin.php">Admin</a>
         <a class="nav-link" href="adminupdate.php">Update</a>
-        <a class="nav-link" href="admininsert.php">Personen Toevoegen</a>
+        <a class="nav-link" href="admininsert.php">Toevoegen</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
   </header>
 
 
-  <main role="main" class="inner cover">  
+<div class="container"> 
 
-  <form action="admin.php" method="GET" class="filter">
-  <h4>Filter</h4>
-  <label class="achternaam">Naam:</label>
+<div class="col-mt-0">
+  <form action="admin.php" method="GET" class="filter p-5">
   <input type="text" name="value" placeholder="Naam" class="input">
   <button type="submit" name="filter" class="filterbtn">Filter</button>
+  </form>  
+</div>
 
+<div class="col-mt-0">
   <table>
                 <tr>
                     <th>Voornaam</th>
@@ -72,8 +74,8 @@ function filterTable($query, $conn)
                 </tr>
                 <?php endwhile;?>
             </table>
-</form>  
-    </main>
+            </div>
+    </div>
 </div>
 </body>
 </html>
