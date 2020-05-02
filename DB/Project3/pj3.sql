@@ -49,7 +49,7 @@ CREATE TABLE `broodpositiedatum` (
   PRIMARY KEY (`idbroodpositieDatum`),
   KEY `FKBestaandBrood` (`idbrood`),
   CONSTRAINT `FKBestaandBrood` FOREIGN KEY (`idbrood`) REFERENCES `broodtype` (`idbroodtype`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `broodpositiedatum` (
 
 LOCK TABLES `broodpositiedatum` WRITE;
 /*!40000 ALTER TABLE `broodpositiedatum` DISABLE KEYS */;
-INSERT INTO `broodpositiedatum` VALUES (1,1,1,'2020-04-15',5,2.20),(2,2,2,'2020-04-20',8,1.30),(3,4,3,'2020-04-19',8,1.30),(4,3,4,'2020-04-10',2,2.00),(5,5,5,'2020-04-05',3,1.50),(6,6,6,'2020-04-13',7,1.75);
+INSERT INTO `broodpositiedatum` VALUES (1,1,1,'2020-04-15',5,2.20),(2,2,2,'2020-04-20',8,1.30),(3,4,3,'2020-04-19',8,1.30),(4,3,4,'2020-04-10',2,2.00),(5,5,5,'2020-04-05',3,1.50),(6,6,6,'2020-04-13',7,1.75),(8,8,0,'0000-00-00',0,0.00);
 /*!40000 ALTER TABLE `broodpositiedatum` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +73,7 @@ CREATE TABLE `broodtype` (
   `idbroodtype` int(11) NOT NULL AUTO_INCREMENT,
   `broodnaam` varchar(45) NOT NULL,
   PRIMARY KEY (`idbroodtype`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +82,7 @@ CREATE TABLE `broodtype` (
 
 LOCK TABLES `broodtype` WRITE;
 /*!40000 ALTER TABLE `broodtype` DISABLE KEYS */;
-INSERT INTO `broodtype` VALUES (1,'bus melkwit'),(2,'bus wit'),(3,'bus tarwe'),(4,'boeren tijger wit'),(5,'boeren mout'),(6,'boeren tarwe');
+INSERT INTO `broodtype` VALUES (1,'bus melkwit'),(2,'bus wit'),(3,'bus tarwe'),(4,'boeren tijger wit'),(5,'boeren mout'),(6,'boeren tarwe'),(7,'wit'),(8,'storting');
 /*!40000 ALTER TABLE `broodtype` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,7 +107,7 @@ CREATE TABLE `klant` (
 
 LOCK TABLES `klant` WRITE;
 /*!40000 ALTER TABLE `klant` DISABLE KEYS */;
-INSERT INTO `klant` VALUES (1,'Dario',1234),(2,'Rubin',5678);
+INSERT INTO `klant` VALUES (1,'Dario',123456789),(2,'Rubin',987654321);
 /*!40000 ALTER TABLE `klant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,10 +120,12 @@ DROP TABLE IF EXISTS `overzichtbroden`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `overzichtbroden` AS SELECT 
+ 1 AS `idbroodpositiedatum`,
  1 AS `broodnaam`,
  1 AS `idbroodtype`,
  1 AS `kostprijs`,
  1 AS `positie`,
+ 1 AS `datum`,
  1 AS `aantalIn`*/;
 SET character_set_client = @saved_cs_client;
 
@@ -189,7 +191,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `overzichtbroden` AS select `broodtype`.`broodnaam` AS `broodnaam`,`broodtype`.`idbroodtype` AS `idbroodtype`,`broodpositiedatum`.`kostprijs` AS `kostprijs`,`broodpositiedatum`.`positie` AS `positie`,`broodpositiedatum`.`aantalIn` AS `aantalIn` from (`broodpositiedatum` join `broodtype` on((`broodtype`.`idbroodtype` = `broodpositiedatum`.`idbrood`))) */;
+/*!50001 VIEW `overzichtbroden` AS select `broodpositiedatum`.`idbroodpositieDatum` AS `idbroodpositiedatum`,`broodtype`.`broodnaam` AS `broodnaam`,`broodtype`.`idbroodtype` AS `idbroodtype`,`broodpositiedatum`.`kostprijs` AS `kostprijs`,`broodpositiedatum`.`positie` AS `positie`,`broodpositiedatum`.`Datum` AS `datum`,`broodpositiedatum`.`aantalIn` AS `aantalIn` from (`broodpositiedatum` join `broodtype` on((`broodtype`.`idbroodtype` = `broodpositiedatum`.`idbrood`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -203,4 +205,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-26 22:54:56
+-- Dump completed on 2020-05-02 14:22:10
