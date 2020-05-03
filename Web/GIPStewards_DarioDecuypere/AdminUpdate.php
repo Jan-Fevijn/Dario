@@ -26,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       }
   }
 
-  if (isset($_GET["afkorting"])) {
+  if (isset($_GET["plaats"])) {
 
-    $sql_plaats = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_GET["afkorting"] . "'";
+    $sql_plaats = "SELECT idPlaats,afkorting FROM plaats WHERE afkorting = '" . $_GET["plaats"] . "'";
     $result = $conn->query($sql_plaats);
 
     if ($result->num_rows > 0) {
@@ -107,10 +107,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $_SESSION["LoggedIn"] = $row["idSteward"];
         ?>
 
-        <form action="AdminUpdate.php" name="updatefrm" methode="GET">
+        <form action="AdminUpdate.php" name="updatetijd" methode="GET">
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
         <td>
-        <select name="tijd" onchange="this.form.submit()">
+        <select name="tijd">
             <option value = 0><-maak uw keuze-></option>
             <option value= 1 name="Tijd"><?php echo $row["Tijd"];?></option>
         </select>
@@ -177,9 +177,33 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           if ($_GET["idSteward"] == $row["idSteward"]) {
             $_SESSION["LoggedIn"] = $row["idSteward"];
         ?>
-        <form action="AdminUpdate.php" name="updatefrm" methode="GET">
+        <form action="AdminUpdate.php" name="updateplaats" methode="GET">
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[1].submit();return false;" href="#">UPDATE</a> </th>
-        <td><input type="text" name="afkorting" value="<?php echo $row["afkorting"]; ?>"></td>
+        <td>
+        <select name="plaats">
+            <option value = 0><-maak uw keuze-></option>
+            <?php
+            If ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                $sql = "SELECT idPlaats, afkorting FROM plaats";
+
+                $resultaat = $conn->query($sql);
+
+                  if ($resultaat->num_rows > 0) {
+        
+                  while($row = $resultaat->fetch_assoc()){
+                    echo  "<option value='" . $row["idPlaats"] . "'>" . $row["afkorting"] . "</option>";
+                  }
+        
+    }
+    else{
+        //echo ($sql);
+        echo "niets gevonden";
+    }
+}
+?>
+        </select>
+        </td>
         </form>
         <?php 
           }else{

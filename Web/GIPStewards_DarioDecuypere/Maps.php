@@ -15,7 +15,6 @@
       <h3 class="masthead-brand">Google Maps</h3>
       <nav class="nav nav-masthead justify-content-center">
         <a class="nav-link" href="times.php">Times</a>
-        <a class="nav-link" href="notificaties.php">Notificaties</a>
         <a class="nav-link active" href="Maps.php">Maps</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>

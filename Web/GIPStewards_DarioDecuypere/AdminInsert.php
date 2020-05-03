@@ -21,14 +21,18 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   switch ($_SESSION["keuzeinsert"]) {
     case 1:
-    $sql = "INSERT INTO evenmenten (naameve,dagen, aantal) VALUES ". $_POST["eveger"] . ",". $_POST["Dagen"] . ",". $_POST["Personen"] .")";
+    if (isset($_POST["Voornaam"],$_POST["Naam"],$_POST["telefoon"],$_POST["email"],$_POST["wachtwoord"])){
+
+    $sql = "INSERT INTO steward(Voornaam, Naam, Telefoonnummer, email, Wachtwoord) VALUES ('". $_POST["Voornaam"] . ",". $_POST["Naam"] . ",". $_POST["telefoon"] . $_POST["email"] . "," . md5($_POST["wachtwoord"]) ."')";
 
     if ($conn->query($sql) === TRUE) {
-      header("location:evenementaanmaken.php");
+      header("location:admin.php");
   } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
   }
+}
   break;
+
 
   case 2:
     $sql = "SELECT idsteward, Voornaam, Naam FROM steward WHERE Voornaam = '" . $_POST["Stewardbes"] . "' or Naam = '" . $_POST["Stewardbes"] . "'";
@@ -43,8 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "stewardid niet gevonden";
       }
 
-
-  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDstewardnieuw'] . ",". $_SESSION['IDTijdnieuw'] . ",". $_SESSION['IDPlaatsnieuw'] ."')
+  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDsteward'] . ",". $_SESSION['IDTijdnieuw'] . ",". $_SESSION['IDPlaatsnieuw'] ."')
   SELECT idSteward, voornaam, naam, idTijd, Tijd, idPlaats, afkorting From steward
   JOIN tijd on idTijd = idTijd
   JOIN plaats on idPlaats = idPlaats";
@@ -54,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("location:admin.php");
   }
 break;
-}
+  }
 }
 
   //$sql_select = "SELECT idSteward,voornaam,naam FROM steward Where idSteward = '" . $_GET["Steward"] . "'";
@@ -120,18 +123,21 @@ break;
             <?php
             switch ($_SESSION["keuzeinsert"]) {
               case 1:
-            ?>
-                    <label class="steward">Steward Toevoegen:</label>
-                    <input type="text" name="Stewardtoe" placeholder="Steward" class="input">
+            ?>      
+                    <label class="vn">Voornaam:</label>
+                    <input type="text" name="Voornaam" placeholder="Voornaam" class="input">
                     <br>
-                    <label class="tijd">Tijd:</label>
-                    <input type="text" name="Tijdtoe" placeholder="Tijd" class="input">
+                    <label class="an">Naam:</label>
+                    <input type="text" name="Naam" placeholder="Naam" class="input">
                     <br>
-                    <label class="Dag">Dag:</label>
-                    <input type="text" name="Dagtoe" placeholder="Dag" class="input">
+                    <label class="tele">Telefoonnummer:</label>
+                    <input type="text" name="telefoon" placeholder="telefoonnummer" class="input">
                     <br>
-                    <label class="Plaats">Plaats:</label>
-                    <input type="text" name="Plaatstoe" placeholder="Plaats" class="input">
+                    <label class="email">email:</label>
+                    <input type="text" name="email" placeholder="email" class="input">
+                    <br>
+                    <label class="wachtwoord">wachtwoord:</label>
+                    <input type="text" name="wachtwoord" placeholder="wachtwoord" class="input">
                     <br>
                     <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
                     <?php break;?>

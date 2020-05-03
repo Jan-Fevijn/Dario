@@ -24,13 +24,14 @@ DROP TABLE IF EXISTS `notificaties`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `notificaties` (
   `idnotificaties` int(11) NOT NULL AUTO_INCREMENT,
-  `ontvanger_id` int(11) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `type` varchar(45) NOT NULL,
+  `naam` varchar(45) NOT NULL,
   `bericht` varchar(45) NOT NULL,
-  `created` datetime NOT NULL,
-  PRIMARY KEY (`idnotificaties`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `status` varchar(45) NOT NULL,
+  `datum` date NOT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idnotificaties`),
+  UNIQUE KEY `idnotificaties_UNIQUE` (`idnotificaties`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +40,7 @@ CREATE TABLE `notificaties` (
 
 LOCK TABLES `notificaties` WRITE;
 /*!40000 ALTER TABLE `notificaties` DISABLE KEYS */;
-INSERT INTO `notificaties` VALUES (1,6,1,'update','','2020-04-15 00:14:30');
+INSERT INTO `notificaties` VALUES (0,'dario','yo matje','unread','2020-05-03',NULL);
 /*!40000 ALTER TABLE `notificaties` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +117,7 @@ CREATE TABLE `steward` (
   `Telefoonnummer` int(11) NOT NULL,
   `Wachtwoord` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `User_TypeID` int(11) NOT NULL,
+  `User_TypeID` int(11) NOT NULL DEFAULT '2',
   PRIMARY KEY (`idSteward`),
   UNIQUE KEY `idStewards_UNIQUE` (`idSteward`),
   UNIQUE KEY `Telefoonnummer_UNIQUE` (`Telefoonnummer`),
@@ -232,4 +233,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-15 16:03:38
+-- Dump completed on 2020-05-03 16:40:09
