@@ -2,17 +2,18 @@
 
 --------------------------------------------------------------------------------------
 
-
+--moeilijkere dingen--
 
 - notificatie systeem
 
-- insert (foutje met idsteward met select)
+- select juist zetten en huidige weergave van uur en plaats (bijna af)
 
-- dropdown (updates)
 
-- login met md5 (week 27/04)
+--Kleine oplosbare dingen--
 
 - veiligheid verwisselen pagina's
+
+- Ww vergeten
 
 
 --
@@ -23,4 +24,5 @@
 
 --
 
--VB personen toevoegen(kan nu niet)
+- VB personen toevoegen(kan nu niet)
+- login met md5

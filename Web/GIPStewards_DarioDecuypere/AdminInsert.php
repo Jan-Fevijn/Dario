@@ -23,10 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     case 1:
     if (isset($_POST["Voornaam"],$_POST["Naam"],$_POST["telefoon"],$_POST["email"],$_POST["wachtwoord"])){
 
-    $sql = "INSERT INTO steward(Voornaam, Naam, Telefoonnummer, email, Wachtwoord) VALUES ('". $_POST["Voornaam"] . ",". $_POST["Naam"] . ",". $_POST["telefoon"] . $_POST["email"] . "," . md5($_POST["wachtwoord"]) ."')";
+    $sql = "INSERT INTO steward(Voornaam, Naam, Telefoonnummer, email, Wachtwoord) VALUES ('". $_POST["Voornaam"] . "','" . $_POST["Naam"] . "','". $_POST["telefoon"] . "','" . $_POST["email"] . "','" . md5($_POST["wachtwoord"]) ."')";
 
     if ($conn->query($sql) === TRUE) {
       header("location:admin.php");
+      $_SESSION["gelukt"] = "u steward is toegevoegd, Voeg nu shifts toe om deze te kunnen zien in de tabel.";
   } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
   }
@@ -35,7 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
   case 2:
-    $sql = "SELECT idsteward, Voornaam, Naam FROM steward WHERE Voornaam = '" . $_POST["Stewardbes"] . "' or Naam = '" . $_POST["Stewardbes"] . "'";
+    if (isset($_POST["Steward"],$_POST["tijd"],$_POST["plaats"])){
+
+    $sql = "SELECT idSteward, Voornaam, Naam FROM steward WHERE idSteward = '" . $_POST["Steward"] . "'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -44,13 +47,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
       else {
-        echo "stewardid niet gevonden";
+        echo "niet gevonden";
       }
 
-  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDsteward'] . ",". $_SESSION['IDTijdnieuw'] . ",". $_SESSION['IDPlaatsnieuw'] ."')
-  SELECT idSteward, voornaam, naam, idTijd, Tijd, idPlaats, afkorting From steward
-  JOIN tijd on idTijd = idTijd
-  JOIN plaats on idPlaats = idPlaats";
+      $sql = "SELECT idTijd, Tijd, dag FROM tijd WHERE idTijd = '" . $_POST["tijd"] . "'";
+      $result = $conn->query($sql);
+  
+      if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()){
+            $_SESSION['idtijd'] = $row['idTijd'];
+        }
+      }
+        else {
+          echo "niet gevonden";
+        }
+
+        $sql = "SELECT idPlaats, afkorting FROM plaats WHERE idPlaats = '" . $_POST["plaats"] . "'";
+        $result = $conn->query($sql);
+    
+        if ($result->num_rows > 0) {
+          while($row = $result->fetch_assoc()){
+              $_SESSION['idPlaats'] = $row['idPlaats'];
+          }
+        }
+          else {
+            echo "niet gevonden";
+          }
+
+  $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDsteward'] . "','". $_SESSION['idtijd'] . "','". $_SESSION['idPlaats'] ."')";
 
   if ($conn->query($sql) === TRUE) {
     echo "gelukt!";
@@ -59,23 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 break;
   }
 }
-
-  //$sql_select = "SELECT idSteward,voornaam,naam FROM steward Where idSteward = '" . $_GET["Steward"] . "'";
-  //$sql_select = "SELECT idTijd,Tijd FROM tijd Where idTijd = '" . $_GET["Tijd"] . "'";
-  //$sql_select = "SELECT idPlaats,afkorting FROM plaats Where idPlaats = '" . $_GET["Plaats"] . "'";
-
-  //$result = $conn->query($sql_select);
-
-  //if ($result->num_rows > 0) {
-      //while($row = $result->fetch_assoc()){
-        //$_SESSION["Steward"] = $row['idSteward'];
-        //$_SESSION["Tijd"] = $row['idTijd'];
-       // $_SESSION["Plaats"] = $row['idPlaats'];
-       // echo "test";
-     // }
-  //} else {
-    //echo "niet gevonden";
-  //}*
+}
 ?>
             
 <!DOCTYPE html>
@@ -144,15 +152,74 @@ break;
             <?php
               case 2:
             ?>
-                <label class="Tijd"> bestaande Steward:</label>
-                    <input type="text" name="Stewardbes" placeholder="Steward" class="input">
-                    <br>
-                    <label class="Dag">Tijd:</label>
-                    <input type="text" name="Tijdbes" placeholder="Tijd" class="input">
-                    <br>
-                    <label class="Plaats">Plaats:</label>
-                    <input type="text" name="Plaatsbes" placeholder="Plaats" class="input">
-                    <br>
+            <select name="Steward">
+            <option value = 0><-maak uw keuze-></option>
+            <?php
+
+                $sql = "SELECT idSteward, Voornaam, Naam FROM steward";
+
+                $resultaat = $conn->query($sql);
+
+                  if ($resultaat->num_rows > 0) {
+        
+                  while($row = $resultaat->fetch_assoc()){
+                    echo  "<option value='" . $row["idSteward"] . "'>" . $row["Voornaam"] . " " .$row["Naam"] ."</option>";
+                  }
+        
+    }
+    else{
+        //echo ($sql);
+        echo "niets gevonden";
+    }
+?>
+        </select>
+        <br>
+
+            <select name="tijd">
+            <option value = 0><-maak uw keuze-></option>
+            <?php
+
+                $sql = "SELECT idTijd, Tijd, dag FROM tijd";
+
+                $resultaat = $conn->query($sql);
+
+                  if ($resultaat->num_rows > 0) {
+        
+                  while($row = $resultaat->fetch_assoc()){
+                    echo  "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . " " .$row["Dag"] ."</option>";
+                  }
+        
+    }
+    else{
+        //echo ($sql);
+        echo "niets gevonden";
+    }
+?>
+        </select>
+        <br>
+
+        <select name="plaats">
+            <option value = 0><-maak uw keuze-></option>
+            <?php
+
+                $sql = "SELECT idPlaats, afkorting FROM plaats";
+
+                $resultaat = $conn->query($sql);
+
+                  if ($resultaat->num_rows > 0) {
+        
+                  while($row = $resultaat->fetch_assoc()){
+                    echo  "<option value='" . $row["idPlaats"] . "'>" . $row["afkorting"] . "</option>";
+                  }
+        
+    }
+    else{
+        //echo ($sql);
+        echo "niets gevonden";
+    }
+?>
+        </select>
+        <br>
                     <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
                     <?php break;?>
         <?php

@@ -7,8 +7,6 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
     
 
     <title>times</title>
@@ -32,7 +30,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Notifications 
                 <?php
-                $query = "SELECT * from `notifications` where `status` = 'unread' order by `date` DESC";
+                $query = "SELECT * from `notificaties` where `status` = 'unread' order by `date` DESC";
                 if(count(fetchAll($query))>0){
                 ?>
                 <span class="badge badge-light"><?php echo count(fetchAll($query)); ?></span>
@@ -42,7 +40,7 @@
               </a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
                 <?php
-                $query = "SELECT * from `notifications` order by `date` DESC";
+                $query = "SELECT * from `notificaties` order by `date` DESC";
                  if(count(fetchAll($query))>0){
                      foreach(fetchAll($query) as $i){
                 ?>
@@ -78,7 +76,7 @@
           
           if(isset($_POST['submit'])){
               $message = $_POST['bericht'];
-              $query ="INSERT INTO `notifications` (`idnotificaties`, `naam`, `type`, `bericht`, `status`, `date`) VALUES (NULL, '', 'insert', '$message', 'unread', CURRENT_TIMESTAMP)";
+              $query ="INSERT INTO `notificaties` (`idnotificaties`, `naam`, `type`, `bericht`, `status`, `date`) VALUES (NULL, '', 'insert', '$message', 'unread', CURRENT_TIMESTAMP)";
               if(performQuery($query)){
                   header("location:times.php");
               }
@@ -93,7 +91,7 @@
           
           if(isset($_POST['update'])){
               $name = $_POST['naam'];
-              $query ="INSERT INTO `notifications` (`idnotificaties`, `naam`, `type`, `message`, `status`, `date`) VALUES (NULL, '$name', 'update', '', 'unread', CURRENT_TIMESTAMP)";
+              $query ="INSERT INTO `notificaties` (`idnotificaties`, `naam`, `type`, `message`, `status`, `date`) VALUES (NULL, '$name', 'update', '', 'unread', CURRENT_TIMESTAMP)";
               if(performQuery($query)){
                   header("location:times.php");
               }

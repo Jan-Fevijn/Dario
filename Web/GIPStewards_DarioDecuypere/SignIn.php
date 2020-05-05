@@ -19,18 +19,11 @@ function checkLogIn() {
     
 }
 
-
-// Start Programma
-
-
 checkLogIn();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // Controle op invoer
-    
     if (isset($_POST["Gebruikersnaam"]) && isset($_POST["Wachtwoord"])){
 
-            // controle gbr en ww + guery maken
             $gbr = $_POST["Gebruikersnaam"];
             $ww = $_POST["Wachtwoord"];
 

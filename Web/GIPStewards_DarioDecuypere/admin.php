@@ -74,6 +74,10 @@ function filterTable($query, $conn)
                 </tr>
                 <?php endwhile;?>
             </table>
+            <?php 
+            if (isset($_SESSION["gelukt"]))
+            echo $_SESSION["gelukt"];
+            ?>
             </div>
     </div>
 </div>
