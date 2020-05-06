@@ -16,11 +16,13 @@ include 'conn.php';
     <form class="form-signin" action="SignIn.php" method="POST">
   <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
   <label for="inputEmail" class="sr-only">E-mail</label>
-  <input type="text" name="Gebruikersnaam" class="form-control" placeholder="E-mail" required>
+  <input type="email" name="Gebruikersnaam" class="form-control" placeholder="E-mail" required>
   <label for="inputPassword" class="sr-only">Password</label>
   <input type="password" name="Wachtwoord" class="form-control" placeholder="Wachtwoord" required>
 
   <button class="btn btn-lg btn-primary btn-block" type="submit">Inloggen</button>
+  <br>
+  <a href="wwvergeten.php">Wachtwoord Vergeten</a>
   <br>
 
 <?php if (isset($_SESSION["fout"])){?>

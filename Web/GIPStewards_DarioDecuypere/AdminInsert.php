@@ -1,11 +1,12 @@
  <?php
 include 'conn.php';
+include 'security.php';
 ?>
 
 <?php
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// op keuze te clearen
+
   if (isset($_POST["Soortinsert"])) {
       $_SESSION["keuzeinsert"] = $_POST["Soortinsert"];
   }
@@ -17,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
   }
 }
 
+// insert van nieuwe steward
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   switch ($_SESSION["keuzeinsert"]) {
@@ -26,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO steward(Voornaam, Naam, Telefoonnummer, email, Wachtwoord) VALUES ('". $_POST["Voornaam"] . "','" . $_POST["Naam"] . "','". $_POST["telefoon"] . "','" . $_POST["email"] . "','" . md5($_POST["wachtwoord"]) ."')";
 
     if ($conn->query($sql) === TRUE) {
-      header("location:admin.php");
+      header("location:admininsert.php");
       $_SESSION["gelukt"] = "u steward is toegevoegd, Voeg nu shifts toe om deze te kunnen zien in de tabel.";
   } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
@@ -34,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
   break;
 
+// select van nieuwe ID's
 
   case 2:
     if (isset($_POST["Steward"],$_POST["tijd"],$_POST["plaats"])){
@@ -74,6 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "niet gevonden";
           }
 
+// insert van nieuwe shift
+
   $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDsteward'] . "','". $_SESSION['idtijd'] . "','". $_SESSION['idPlaats'] ."')";
 
   if ($conn->query($sql) === TRUE) {
@@ -109,6 +114,7 @@ break;
     </div>
   </header>
 
+<!--select met form-->
   <div id="container" class="container">
   <form action="Admininsert.php" name="nieuw" method="POST">
     <?php if (!isset($_SESSION["keuzeinsert"])) {?>
@@ -128,6 +134,16 @@ break;
                     break;
                   }
         ?>
+        <br>
+        <?php 
+            if (isset($_SESSION["gelukt"])){
+            ?>
+            <p class="font-weight-bold"><?php echo $_SESSION["gelukt"] ?></p>
+        <?php
+            }
+        ?>
+        <br>
+        <!--invoeren-->
             <?php
             switch ($_SESSION["keuzeinsert"]) {
               case 1:

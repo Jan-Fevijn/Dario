@@ -11,8 +11,6 @@
 
 --Kleine oplosbare dingen--
 
-- veiligheid verwisselen pagina's
-
 - Ww vergeten
 
 
@@ -25,4 +23,3 @@
 --
 
 - VB personen toevoegen(kan nu niet)
-- login met md5

@@ -9,7 +9,6 @@ function checkLogIn() {
             header("location: admin.php");
         } elseif($_SESSION['user'] == 2){
             header("location: Times.php");
-
         }
     }
     } else {
@@ -30,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $gbr = strip_tags(mysqli_real_escape_string($conn, trim($gbr)));
             $ww = strip_tags(mysqli_real_escape_string($conn, trim($ww)));
             
-            $sql_controleGebruiker = "SELECT idSteward, email, Wachtwoord, User_TypeID FROM steward WHERE email = '" . $gbr . "' and Wachtwoord = '" . $ww ."'";
+            $sql_controleGebruiker = "SELECT idSteward, email, Wachtwoord, User_TypeID FROM steward WHERE email = '" . $gbr . "' and Wachtwoord = '" . md5($ww) ."'";
             $result = $conn->query($sql_controleGebruiker);
 
             if ($result->num_rows > 0) {

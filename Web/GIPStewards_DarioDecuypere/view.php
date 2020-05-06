@@ -1,15 +1,15 @@
 <h1>Notifications</h1>
 
 <?php
-    
+    include 'security.php';
     include("classnotificaties.php");
 
     $id = $_GET['id'];
 
-    $query ="UPDATE `notifications` SET `status` = 'read' WHERE `idnotificaties` = $id;";
+    $query ="UPDATE `notificaties` SET `status` = 'read' WHERE `idnotificaties` = $id;";
     performQuery($query);
 
-    $query = "SELECT * from `notifications` where `idnotificaties` = '$id';";
+    $query = "SELECT * from `notificaties` where `idnotificaties` = '$id';";
     if(count(fetchAll($query))>0){
         foreach(fetchAll($query) as $i){
             if($i['type']=='update'){

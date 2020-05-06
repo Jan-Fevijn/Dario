@@ -90,7 +90,7 @@ CREATE TABLE `shift` (
   CONSTRAINT `idPlaats` FOREIGN KEY (`idPlaats`) REFERENCES `plaats` (`idPlaats`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `idSteward` FOREIGN KEY (`idSteward`) REFERENCES `steward` (`idSteward`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `idTijd` FOREIGN KEY (`idTijd`) REFERENCES `tijd` (`idTijd`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `shift` (
 
 LOCK TABLES `shift` WRITE;
 /*!40000 ALTER TABLE `shift` DISABLE KEYS */;
-INSERT INTO `shift` VALUES (2,6,1,2),(3,7,3,1),(10,6,3,1),(11,10,3,1);
+INSERT INTO `shift` VALUES (12,11,2,1),(13,13,2,2);
 /*!40000 ALTER TABLE `shift` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +114,7 @@ CREATE TABLE `steward` (
   `idSteward` int(11) NOT NULL AUTO_INCREMENT,
   `Voornaam` varchar(45) NOT NULL,
   `Naam` varchar(45) NOT NULL,
-  `Telefoonnummer` int(11) NOT NULL,
+  `Telefoonnummer` varchar(20) NOT NULL,
   `Wachtwoord` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `wwResetCode` varchar(45) DEFAULT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE `steward` (
   UNIQUE KEY `idSteward_UNIQUE` (`idSteward`),
   KEY `user_idx` (`User_TypeID`),
   CONSTRAINT `user` FOREIGN KEY (`User_TypeID`) REFERENCES `usertype` (`idUserType`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `steward` (
 
 LOCK TABLES `steward` WRITE;
 /*!40000 ALTER TABLE `steward` DISABLE KEYS */;
-INSERT INTO `steward` VALUES (4,'admin','admin',0,'admin','admin','',1),(6,'Dario','Decuypere',1,'dario','dario','',2),(7,'rubin','rubin',2,'rubin','rubin',NULL,2),(9,'test','test',20,'098f6bcd4621d373cade4e832627b4f6','test@test.test',NULL,2),(10,'test','test',202,'098f6bcd4621d373cade4e832627b4f6','test1@test.test',NULL,2);
+INSERT INTO `steward` VALUES (11,'Dario','Decuypere','2147483647','098f6bcd4621d373cade4e832627b4f6','ddcdecuypere@gmail.com','480618776',2),(13,'Rubin','Paudel','202','098f6bcd4621d373cade4e832627b4f6','test@test.test',NULL,2),(14,'admin','admin','1','21232f297a57a5a743894a0e4a801fc3','admin@admin.admin',NULL,1);
 /*!40000 ALTER TABLE `steward` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-05 14:11:53
+-- Dump completed on 2020-05-06 15:15:44

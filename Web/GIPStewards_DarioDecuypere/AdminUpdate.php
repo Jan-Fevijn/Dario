@@ -1,9 +1,11 @@
 <?php
 include 'conn.php';
+include 'security.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
   if (isset($_GET["Tijd"])) {
 
+    //select van tijd
     $sql_tijd = "SELECT idTijd,Tijd FROM tijd WHERE idTijd = '" . $_GET["tijd"] . "'";
     $result = $conn->query($sql_tijd);
 
@@ -16,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         echo "niet gevonden";
       }
 
-      
+      // update van tijd
     $sql_update_tijd = "UPDATE shift SET idTijd= '" . $_SESSION['IDtijd']  ."' WHERE idSteward=". $_SESSION["LoggedIn"] . "";
 
       if ($conn->query($sql_update_tijd) === TRUE) {
@@ -28,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
   if (isset($_GET["plaats"])) {
 
+    //select van plaats
     $sql_plaats = "SELECT idPlaats,afkorting FROM plaats WHERE idPlaats = '" . $_GET["plaats"] . "'";
     $result = $conn->query($sql_plaats);
 
@@ -40,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         echo "niet gevonden";
       }
 
+      //update van plaats
       $sql_update_plaats = "UPDATE shift SET idPlaats= '" . $_SESSION['IDplaats']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
 
       if ($conn->query($sql_update_plaats) === TRUE) {
@@ -112,8 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         
                   while($row = $resultaat->fetch_assoc()){
                     echo  "<option value='" . $row["idtijd"] . "'>" . $row["Tijd"] . "</option>";
-                  }
-        
+                  }  
     }
     else{
         //echo ($sql);
