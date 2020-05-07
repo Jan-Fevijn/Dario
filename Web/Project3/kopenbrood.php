@@ -18,56 +18,55 @@ $datum = date("Y-m-d");
   } 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (isset($_POST["positie"], $_POST["datum"])){
+  if (isset($_POST["positie"])){
     if (isset($_SESSION['loggedIn'])) {
 
-  // positie krijgen van het brood dat gekocht wil worden
-  $sql_get_pos ="SELECT idbroodpositieDatum, idbrood, positie from broodpositieDatum where positie = ". $_POST["positie"] ."";
+              // select voor alles van broodpositiedatum
+              $sql_get_pos_aan ="SELECT idbroodpositieDatum, idbrood, positie, aantalIn, kostprijs from broodpositieDatum where datum = $datum";
 
-  $result = $conn->query($sql_get_pos);
-  
-    if ($result->num_rows > 0) {
-      while($row = $result->fetch_assoc()){
-        $_SESSION["positieid"] = $row["idbroodpositieDatum"];
-      }
-  } 
+              $result = $conn->query($sql_get_pos_aan);
+              
+                if ($result->num_rows > 0) {
+                  while($row = $result->fetch_assoc()){
+                    $hoeveelheid = $row['aantalIn'];
+                    $brood = $row["idbrood"];
+                    $locatie = $row['positie'];
+                    $prijs = $row['kostprijs'];
+                    $_SESSION["positieid"] = $row['idbroodpositieDatum'];
+                  }
+              } 
 
-  // insert van een klant de datum van aankoop en de positie van brood
-  $sql = "INSERT INTO saldo (idklant,saldo,datum,broodpositiedatum) VALUES ('". $_SESSION["loggedIn"] . "','" . $_SESSION["saldo"] . "','" . $_POST["datum"] . "','" . $_SESSION["positieid"] . "')";
+      // insert voor saldo van klant te bepalen
+  $sql = "INSERT INTO saldo (idklant,saldo,datum,broodpositiedatum) VALUES ('". $_SESSION["loggedIn"] . "', $prijs*-1 , $datum ,'" . $_SESSION["positieid"] . "')";
   if ($conn->query($sql) === TRUE) {
 
               }
     } else {
       header("location: overzichtbrood.php ");
     }
-        // select voor aantal en positie
-        $sql_get_pos_aan ="SELECT idbroodpositieDatum, positie, aantalIn, kostprijs from broodpositieDatum where positie = ". $_POST["positie"] ."";
 
-        $result = $conn->query($sql_get_pos_aan);
+
+          //berekenen aantal broden
+    $sql ="SELECT count(idbroodpositieDatum) from saldo where idbroodpositiedatum = '".$_SESSION["positieid"]."' and datum = $datum ";
+
+    $result = $conn->query($sql);
         
-          if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()){
-              $hoeveelheid = $row['aantalIn'] - 1;
-              $locatie = $row['positie'];
-              $prijs = $row['kostprijs'];
-            }
-        } 
-      
-        // update van je aantal broden op de juiste locatie
-           $sql = "UPDATE broodpositiedatum SET aantalIn = $hoeveelheid WHERE locatie = $locatie";
-           if ($conn->query($sql) === TRUE) {  
-            echo "test";
-            }
-            //update van je saldo 
-            $saldo = $_SESSION["saldo"] - $prijs;
-            echo "test";
-                              
-            $sql = "UPDATE saldo SET saldo = $saldo WHERE idklant = '". $_SESSION["loggedIn"]. "' AND datum = $datum";
-            if ($conn->query($sql) === TRUE) {
-            $_SESSION["aankoop"] = "aankoop voltooid";
-            } 
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+        $aantalgekocht = $row[count("idbroodpositieDatum")];
+      }
+  } 
+  
+
+  //insert van nieuw aantal
+      $sql = "INSERT INTO broodpositiedatum (idbrood,aantalIn,positie,datum) VALUES ($brood , $hoeveelheid - $aantalgekocht , $locatie , $datum)";
+      if ($conn->query($sql) === TRUE) {
+    
+                  }
+        } else {
+          header("location: overzichtbrood.php ");
+        }
   }
-}
 ?>
 
 <!DOCTYPE html>
@@ -109,34 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <main role="main" class="container">
 
-<?php
-  $sql = "SELECT idbrood ,datum FROM broodpositiedatum";
-  $result = $conn->query($sql);
-
-  if ($result->num_rows > 0) {
-?>
-
-<?php  
-              while($row = $result->fetch_assoc()){
-
-                $options='<option value=1>'. $datum . '</option> ';
-   }
-  }
-    else {
-      echo "geen datums gevonden";
-    }
-?>
-
 <form action="kopenbrood.php" name="koop" method="POST">
-    <?php if (!isset($_SESSION["keuzedatum"])) {?>
-        <select name="datum">
-            <option value = 0><-maak uw keuze -></option>
-            <?php echo $options;?>
-            </select>
-<?php
-}
-?>
-
   <label>Geef positie van brood:</label>
   <input type="text" name="positie" placeholder="positie" required>
   <p><button type="submit">Submit</button></p>
