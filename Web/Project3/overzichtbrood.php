@@ -1,5 +1,18 @@
 <?php
 include 'conn.php';
+include 'checksecurity.php';
+
+      // Saldo terugkrijgen van ingelogd persoon
+      $sql_saldo = "SELECT sum(saldo) from saldo
+    where idklant = ". $_SESSION["loggedIn"] ."";
+  
+    $result = $conn->query($sql_saldo);
+  
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+        $_SESSION["saldo"] = $row["sum(saldo)"];
+      }
+  }
 ?>
 
 <!DOCTYPE html>
@@ -25,18 +38,12 @@ include 'conn.php';
       </li>
       <?php
     if (isset($_SESSION["loggedIn"])){
-        $sql_balans = "SELECT saldo from saldo where idklant = ". $_SESSION["loggedIn"] ."";
-        $resultaat = $conn->query($sql_balans);
-            
-                    if ($resultaat->num_rows > 0) {
-                        while($row = $resultaat->fetch_assoc()){
+       
 ?>
     <li class="nav-item">
-        <a class="nav-link"><?php echo "€" . $row["saldo"];?></a>
+        <a class="nav-link"><?php echo "€" . $_SESSION["saldo"];?></a>
     </li>
 <?php
-                        }
-                    }
                   }
 ?>
       <li class="nav-item">

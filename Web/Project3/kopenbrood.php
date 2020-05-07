@@ -1,11 +1,9 @@
 <?php
 include 'conn.php';
+include 'checksecurity.php';
 
 $datum = date("Y-m-d");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (isset($_POST["positie"], $_POST["datum"])){
-    if (isset($_SESSION['loggedIn'])) {
 
       // Saldo terugkrijgen van ingelogd persoon
       $sql_saldo = "SELECT sum(saldo) from saldo
@@ -19,8 +17,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
   } 
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["positie"], $_POST["datum"])){
+    if (isset($_SESSION['loggedIn'])) {
+
   // positie krijgen van het brood dat gekocht wil worden
-  $sql_get_pos ="SELECT idbroodpositieDatum, positie from broodpositieDatum where positie = ". $_POST["positie"] ."";
+  $sql_get_pos ="SELECT idbroodpositieDatum, idbrood, positie from broodpositieDatum where positie = ". $_POST["positie"] ."";
 
   $result = $conn->query($sql_get_pos);
   
@@ -31,40 +33,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   } 
 
   // insert van een klant de datum van aankoop en de positie van brood
-  $sql = "INSERT INTO `project3`.`saldo` (`idklant`,`saldo`,`datum`,`broodpositiedatum`) VALUES ('". $_SESSION['loggedIn'] . "," . $_SESSION['saldo'] . "," . $_POST['datum'] . "," . $_SESSION['positieid'] . "')";
+  $sql = "INSERT INTO saldo (idklant,saldo,datum,broodpositiedatum) VALUES ('". $_SESSION["loggedIn"] . "','" . $_SESSION["saldo"] . "','" . $_POST["datum"] . "','" . $_SESSION["positieid"] . "')";
   if ($conn->query($sql) === TRUE) {
-    // select voor aantal en positie
-    $sql_get_pos_aan ="SELECT idbroodpositieDatum, positie, aantalIn, kostprijs from broodpositieDatum where positie = ". $_POST["positie"] ."";
 
-  $result = $conn->query($sql_get_pos_aan);
-  
-    if ($result->num_rows > 0) {
-      while($row = $result->fetch_assoc()){
-        $hoeveelheid = $row['aantalIn'] - 1;
-        $locatie = $row['positie'];
-        $prijs = $row['kostprijs'];
-      }
-  } 
-
-  // update van je aantal broden op de juiste locatie
-     $sql = "UPDATE broodpositiedatum SET `aantalIn` = $hoeveelheid WHERE locatie = $locatie";
-     if ($conn->query($sql) === TRUE) {
-
-      //update van je saldo 
-
-                         $saldo = $_SESSION["saldo"] - $prijs;
-                        
-        
-                          $sql = "UPDATE saldo SET saldo = $saldo WHERE idklant = ". $_SESSION["loggedIn"]." AND datum = $datum";
-                         if ($conn->query($sql) === TRUE) {
-                          echo "uw aankoop is voltooid<br>";
-                      }
-
-                  }
               }
     } else {
       header("location: overzichtbrood.php ");
     }
+        // select voor aantal en positie
+        $sql_get_pos_aan ="SELECT idbroodpositieDatum, positie, aantalIn, kostprijs from broodpositieDatum where positie = ". $_POST["positie"] ."";
+
+        $result = $conn->query($sql_get_pos_aan);
+        
+          if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()){
+              $hoeveelheid = $row['aantalIn'] - 1;
+              $locatie = $row['positie'];
+              $prijs = $row['kostprijs'];
+            }
+        } 
+      
+        // update van je aantal broden op de juiste locatie
+           $sql = "UPDATE broodpositiedatum SET aantalIn = $hoeveelheid WHERE locatie = $locatie";
+           if ($conn->query($sql) === TRUE) {  
+            echo "test";
+            }
+            //update van je saldo 
+            $saldo = $_SESSION["saldo"] - $prijs;
+            echo "test";
+                              
+            $sql = "UPDATE saldo SET saldo = $saldo WHERE idklant = '". $_SESSION["loggedIn"]. "' AND datum = $datum";
+            if ($conn->query($sql) === TRUE) {
+            $_SESSION["aankoop"] = "aankoop voltooid";
+            } 
   }
 }
 ?>
@@ -92,18 +93,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </li>
       <?php
     if (isset($_SESSION["loggedIn"])){
-        $sql_balans = "SELECT saldo from saldo where idklant = ". $_SESSION["loggedIn"] ."";
-        $resultaat = $conn->query($sql_balans);
-            
-                    if ($resultaat->num_rows > 0) {
-                        while($row = $resultaat->fetch_assoc()){
 ?>
     <li class="nav-item">
-        <a class="nav-link"><?php echo "€" . $row["saldo"];?></a>
+        <a class="nav-link"><?php echo "€" . $_SESSION["saldo"];?></a>
     </li>
 <?php
-                        }
-                    }
                   }
 ?>
       <li class="nav-item">
@@ -116,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <main role="main" class="container">
 
 <?php
-  $sql = "SELECT idbroodpositiedatum ,datum FROM broodpositiedatum";
+  $sql = "SELECT idbrood ,datum FROM broodpositiedatum";
   $result = $conn->query($sql);
 
   if ($result->num_rows > 0) {
@@ -143,12 +137,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<form action="kopenbrood.php" method="POST">
   <label>Geef positie van brood:</label>
   <input type="text" name="positie" placeholder="positie" required>
   <p><button type="submit">Submit</button></p>
 </form>
-
+<?php
+  if (isset($_SESSION["aankoop"])){
+    echo $_SESSION["aankoop"];
+  }
+?>
+<br>
 <table>
 			    <tr>
                     <th>brood</th>
