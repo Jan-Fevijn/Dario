@@ -2,8 +2,7 @@
 include 'conn.php';
 include 'checksecurity.php';
 
-$datum = date("Y-m-d");
-
+$datum = date("yymd");
 
       // Saldo terugkrijgen van ingelogd persoon
       $sql_saldo = "SELECT sum(saldo) from saldo
@@ -22,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_SESSION['loggedIn'])) {
 
               // select voor alles van broodpositiedatum
-              $sql_get_pos_aan ="SELECT idbroodpositieDatum, idbrood, positie, aantalIn, kostprijs from broodpositieDatum where datum = $datum";
+              $sql_get_pos_aan ="SELECT idbroodpositieDatum, idbrood, positie, aantalIn, kostprijs from broodpositieDatum where datum = $datum and positie = '". $_POST["positie"] ."'";
 
               $result = $conn->query($sql_get_pos_aan);
               
@@ -31,10 +30,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $hoeveelheid = $row['aantalIn'];
                     $brood = $row["idbrood"];
                     $locatie = $row['positie'];
-                    $prijs = $row['kostprijs'];
+                    $prijs = $row["kostprijs"];
                     $_SESSION["positieid"] = $row['idbroodpositieDatum'];
                   }
-              } 
+              }
+
+    //berekenen aantal broden
+    $sql ="SELECT count(broodpositieDatum) as broden from saldo where broodpositiedatum = '".$_SESSION["positieid"]."' and datum = $datum ";
+
+    $result = $conn->query($sql);
+        
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+        $aantalgekocht = $row["broden"];
+      }
+  } 
 
       // insert voor saldo van klant te bepalen
   $sql = "INSERT INTO saldo (idklant,saldo,datum,broodpositiedatum) VALUES ('". $_SESSION["loggedIn"] . "', $prijs*-1 , $datum ,'" . $_SESSION["positieid"] . "')";
@@ -45,21 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       header("location: overzichtbrood.php ");
     }
 
-
-          //berekenen aantal broden
-    $sql ="SELECT count(idbroodpositieDatum) from saldo where idbroodpositiedatum = '".$_SESSION["positieid"]."' and datum = $datum ";
-
-    $result = $conn->query($sql);
-        
-    if ($result->num_rows > 0) {
-      while($row = $result->fetch_assoc()){
-        $aantalgekocht = $row[count("idbroodpositieDatum")];
-      }
-  } 
-  
-
   //insert van nieuw aantal
-      $sql = "INSERT INTO broodpositiedatum (idbrood,aantalIn,positie,datum) VALUES ($brood , $hoeveelheid - $aantalgekocht , $locatie , $datum)";
+      $sql = "INSERT INTO broodpositiedatum (idbrood,aantalIn,positie,datum, kostprijs) VALUES ($brood , $hoeveelheid - $aantalgekocht , $locatie , $datum, $prijs)";
       if ($conn->query($sql) === TRUE) {
     
                   }
@@ -129,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php 
                 if (isset($_SESSION["loggedIn"])){
 
-			        $sql_data = "SELECT * from overzichtbroden";
+			        $sql_data = "SELECT * from overzichtbroden where Datum = $datum";
 
 
                     $resultaat = $conn->query($sql_data);
