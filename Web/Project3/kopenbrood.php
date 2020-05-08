@@ -55,15 +55,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       header("location: overzichtbrood.php ");
     }
 
-  //insert van nieuw aantal
-      $sql = "INSERT INTO broodpositiedatum (idbrood,aantalIn,positie,datum, kostprijs) VALUES ($brood , $hoeveelheid - $aantalgekocht , $locatie , $datum, $prijs)";
-      if ($conn->query($sql) === TRUE) {
-    
-                  }
-        } else {
-          header("location: overzichtbrood.php ");
-        }
+    // update van aantal
+    $sql = "UPDATE broodpositiedatum SET aantalIn = $hoeveelheid - $aantalgekocht WHERE idbrood= $brood and datum = $datum and kostprijs = $prijs and positie = $locatie";
+
+    if ($conn->query($sql) === TRUE) {
+        
+    } else {
+        echo "fout bij het aanpassen: " . $conn->error;
+    }
   }
+}
 ?>
 
 <!DOCTYPE html>
