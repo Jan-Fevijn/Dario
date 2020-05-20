@@ -6,16 +6,23 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <html>
 <head>
-    <title>email</title>
+    <title>nieuw ww code</title>
 </head>
 <body class="text-center">
-    <form class="form-signin" action="wwverwerking.php" method="POST">
-  <label for="inputEmail" class="sr-only">E-mail</label>
-  <input type="email" name="email" class="form-control" placeholder="E-mail" required>
+    <form class="form-signin" action="checkcode.php" method="POST">
+  <label for="inputcode" class="sr-only">code</label>
+  <input type="text" name="code" class="form-control" placeholder="code" required>
   <br>
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Zend mail</button>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">submit</button>
   <br>
-  <a href="index.php">Terug</a>
+  <?php if (isset($_SESSION["verzonden"])){?>
+  <p class="font-weight-bold"><?php echo $_SESSION["verzonden"] ?>!</p>
+<?php
+unset($_SESSION["verzonden"]);
+}  
+?>
+<br>
+  <a href="wwvergeten.php">Terug</a>
 </form>
 </body>
 </html>

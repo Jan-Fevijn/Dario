@@ -2,6 +2,32 @@
 include 'conn.php';
 include 'security.php';
 
+//Option van plaats
+$sql = "SELECT idPlaats, afkorting FROM plaats";
+
+$resultaat = $conn->query($sql);
+
+  if ($resultaat->num_rows > 0) {
+
+  while($row = $resultaat->fetch_assoc()){
+    $plaats = "<option value='" . $row["idPlaats"] . "'>" . $row["afkorting"] . "</option>";
+  }
+
+}
+
+//option van tijd
+$sql = "SELECT idTijd, Tijd FROM tijd";
+
+$resultaat = $conn->query($sql);
+
+  if ($resultaat->num_rows > 0) {
+
+  while($row = $resultaat->fetch_assoc()){
+    $tijd = "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . "</option>";
+  }  
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
   if (isset($_GET["Tijd"])) {
 
@@ -14,9 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           $_SESSION['IDtijd'] = $row['idTijd'];
       }
     }
-      else {
-        echo "niet gevonden";
-      }
 
       // update van tijd
     $sql_update_tijd = "UPDATE shift SET idTijd= '" . $_SESSION['IDtijd']  ."' WHERE idSteward=". $_SESSION["LoggedIn"] . "";
@@ -39,9 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           $_SESSION['IDplaats'] = $row['idPlaats'];
       }
     }
-      else {
-        echo "niet gevonden";
-      }
 
       //update van plaats
       $sql_update_plaats = "UPDATE shift SET idPlaats= '" . $_SESSION['IDplaats']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
@@ -95,6 +115,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       </tr>
     </thead>
     <?php
+        $sql = "SELECT * FROM stewardsinfo";
+        $result = $conn->query($sql);
+        
+        if ($result->num_rows > 0) {
+          while($row = $result->fetch_assoc()){
+            
+
         if (isset($_GET["idSteward"])) {
           if ($_GET["idSteward"] == $row["idSteward"]) {
             $_SESSION["LoggedIn"] = $row["idSteward"];
@@ -105,47 +132,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
         <td>
         <select name="tijd">
-            <option value = 0><-maak uw keuze-></option>
-            <?php
-
-                $sql = "SELECT idTijd, Tijd FROM tijd";
-
-                $resultaat = $conn->query($sql);
-
-                  if ($resultaat->num_rows > 0) {
-        
-                  while($row = $resultaat->fetch_assoc()){
-                    echo  "<option value='" . $row["idtijd"] . "'>" . $row["Tijd"] . "</option>";
-                  }  
-    }
-    else{
-        //echo ($sql);
-        echo "niets gevonden";
-    }
-?>
+            <option value = 0><?php echo $row["Tijd"] ?></option>
+            <?php echo $tijd?>
         </select>
         </td>
         <td>
         <select name="plaats">
-            <option value = 0><-maak uw keuze-></option>
-            <?php
-
-                $sql = "SELECT idPlaats, afkorting FROM plaats";
-
-                $resultaat = $conn->query($sql);
-
-                  if ($resultaat->num_rows > 0) {
-        
-                  while($row = $resultaat->fetch_assoc()){
-                    echo  "<option value='" . $row["idPlaats"] . "'>" . $row["afkorting"] . "</option>";
-                  }
-        
-    }
-    else{
-        //echo ($sql);
-        echo "niets gevonden";
-    }
-?>
+            <option value = 0><?php echo $row["afkorting"] ?></option>
+            <?php echo $plaats?>
         </select>
         </td>
         </form>
@@ -170,6 +164,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         <td><?php echo $row["Naam"]; ?></td>
         <td><?php echo $row["Dag"]; ?></td>
       </tr>
+      <?php
+                }
+              }
+      ?>
     </tbody>
   </table>
 </div>
