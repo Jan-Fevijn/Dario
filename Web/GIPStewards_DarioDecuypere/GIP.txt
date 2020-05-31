@@ -6,13 +6,6 @@
 
 - notificatie systeem
 
-- select juist zetten en huidige weergave van uur en plaats (bijna af)
-
-
---Kleine oplosbare dingen--
-
-- Ww vergeten
-
 
 --
 

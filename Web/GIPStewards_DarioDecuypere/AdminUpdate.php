@@ -4,13 +4,15 @@ include 'security.php';
 
 //Option van plaats
 $sql = "SELECT idPlaats, afkorting FROM plaats";
+$plaats = "";
+$tijd = "";
 
 $resultaat = $conn->query($sql);
 
   if ($resultaat->num_rows > 0) {
 
   while($row = $resultaat->fetch_assoc()){
-    $plaats = "<option value='" . $row["idPlaats"] . "'>" . $row["afkorting"] . "</option>";
+    $plaats = $plaats . "<option value='" . $row["idPlaats"] . "'>" . $row["afkorting"] . "</option>";
   }
 
 }
@@ -23,7 +25,7 @@ $resultaat = $conn->query($sql);
   if ($resultaat->num_rows > 0) {
 
   while($row = $resultaat->fetch_assoc()){
-    $tijd = "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . "</option>";
+    $tijd = $tijd . "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . "</option>";
   }  
 }
 
