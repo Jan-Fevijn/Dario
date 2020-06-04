@@ -20,6 +20,11 @@ table {
     color: #333;
     padding: 10px;
   }
+
+  select {
+    display: block;
+    margin: 0 auto;
+    }
   
   /*
    * Globals

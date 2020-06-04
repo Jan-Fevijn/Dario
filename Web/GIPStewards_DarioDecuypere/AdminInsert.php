@@ -82,11 +82,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $sql = "INSERT INTO shift (idSteward,idTijd,idPlaats) VALUES ('". $_SESSION['IDsteward'] . "','". $_SESSION['idtijd'] . "','". $_SESSION['idPlaats'] ."')";
 
   if ($conn->query($sql) === TRUE) {
-    echo "gelukt!";
+    $_SESSION["gelukt"] = "u shift is toegevoegd.";
     header("location:admin.php");
   }
 break;
   }
+
+  case 3:
+    if (isset($_POST["nwEmail"],$_POST["emailsteward"])){
+
+      $sql = "SELECT idSteward, Voornaam, Naam FROM steward WHERE idSteward = '" . $_POST["emailsteward"] . "'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()){
+          $_SESSION['emailnieuw'] = $row['idSteward'];
+      }
+    }
+      else {
+        echo "niet gevonden";
+      }
+
+      $sql = "UPDATE steward SET email = '" . $_POST['nwEmail']  ."' WHERE idSteward = '". $_SESSION["emailnieuw"] . "'";
+
+      if ($conn->query($sql) === TRUE) {
+        $_SESSION["gelukt"] = "email is toegevoegd.";
+        header("location:Admininsert.php");
+      }
+    break;
+    }
 }
 }
 ?>
@@ -118,10 +142,12 @@ break;
   <div id="container" class="container">
   <form action="Admininsert.php" name="nieuw" method="POST">
     <?php if (!isset($_SESSION["keuzeinsert"])) {?>
-        <select name="Soortinsert" onchange="this.form.submit()">
+      <div class="row d-flex justify-content-center">
+        <select name="Soortinsert" class="mx-auto" onchange="this.form.submit()">
             <option value = 0><-maak uw keuze -></option>
             <option value = 1>Nieuwe steward toevoegen</option>
             <option value = 2>Nieuwe shift toevoegen</option>
+            <option value = 3>Nieuw email</option>
         </select>
         <?php 
         } else {
@@ -132,20 +158,17 @@ break;
                 case 2:
                     echo "<p>shift toevoegen <a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
                     break;
+                case 3:
+                    echo "<p>email toevoegen <a class='btn btn-outline-primary' href='?typeClear=1'>CLEAR</a></p>";
+                    break;
                   }
         ?>
-        <br>
-        <?php 
-            if (isset($_SESSION["gelukt"])){
-            ?>
-            <p class="font-weight-bold"><?php echo $_SESSION["gelukt"] ?></p>
-        <?php
-            }
-        ?>
+      </div>
         <br>
         <!--invoeren-->
             <?php
             switch ($_SESSION["keuzeinsert"]) {
+              //steward options
               case 1:
             ?>      
                     <label class="vn">Voornaam:</label>
@@ -155,24 +178,25 @@ break;
                     <input type="text" name="Naam" placeholder="Naam" class="input">
                     <br>
                     <label class="tele">Telefoonnummer:</label>
-                    <input type="text" name="telefoon" placeholder="telefoonnummer" class="input">
+                    <input type="tel" name="telefoon" placeholder="telefoonnummer" class="input">
                     <br>
                     <label class="email">email:</label>
-                    <input type="text" name="email" placeholder="email" class="input">
+                    <input type="email" name="email" placeholder="email" class="input">
                     <br>
                     <label class="wachtwoord">wachtwoord:</label>
-                    <input type="text" name="wachtwoord" placeholder="wachtwoord" class="input">
+                    <input type="password" name="wachtwoord" placeholder="wachtwoord" class="input">
                     <br>
                     <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
                     <?php break;?>
             <?php
+            //shift options
               case 2:
             ?>
             <select name="Steward">
-            <option value = 0><-maak uw keuze-></option>
+            <option value = 0><-Kies een steward-></option>
             <?php
 
-                $sql = "SELECT idSteward, Voornaam, Naam FROM steward";
+                $sql = "SELECT idSteward, Voornaam, Naam FROM steward order by Voornaam";
 
                 $resultaat = $conn->query($sql);
 
@@ -184,41 +208,39 @@ break;
         
     }
     else{
-        //echo ($sql);
         echo "niets gevonden";
     }
-?>
+    ?>
         </select>
         <br>
 
             <select name="tijd">
-            <option value = 0><-maak uw keuze-></option>
+            <option value = 0><-Kies een tijd-></option>
             <?php
 
-                $sql = "SELECT idTijd, Tijd, dag FROM tijd";
+                $sql = "SELECT idTijd, Tijd, dag FROM tijd order by Tijd";
 
                 $resultaat = $conn->query($sql);
 
                   if ($resultaat->num_rows > 0) {
         
                   while($row = $resultaat->fetch_assoc()){
-                    echo  "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . " " .$row["Dag"] ."</option>";
+                    echo  "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . " " . $row["Dag"] ."</option>";
                   }
         
     }
     else{
-        //echo ($sql);
         echo "niets gevonden";
     }
-?>
+    ?>
         </select>
         <br>
 
         <select name="plaats">
-            <option value = 0><-maak uw keuze-></option>
+            <option value = 0><-Kies een plaats-></option>
             <?php
 
-                $sql = "SELECT idPlaats, afkorting FROM plaats";
+                $sql = "SELECT idPlaats, afkorting FROM plaats order by afkorting";
 
                 $resultaat = $conn->query($sql);
 
@@ -230,18 +252,54 @@ break;
         
     }
     else{
-        //echo ($sql);
         echo "niets gevonden";
     }
-?>
+    ?>
         </select>
         <br>
                     <button type="submit" name="Toevoegen" class="Toevoegen">Toevoegen</button>
                     <?php break;?>
+        
+
         <?php
-            }
-            }
+        //email options
+        case 3:
         ?>
+            <select name="emailsteward">
+            <option value = 0><-Kies steward-></option>
+            <?php
+
+                $sql = "SELECT idSteward, Voornaam, Naam FROM steward order by Voornaam";
+
+                $resultaat = $conn->query($sql);
+
+                  if ($resultaat->num_rows > 0) {
+        
+                  while($row = $resultaat->fetch_assoc()){
+                    echo  "<option value='" . $row["idSteward"] . "'>" . $row["Voornaam"] . " " .$row["Naam"] ."</option>";
+                  }
+        
+    }
+    ?>
+        </select>
+        <br>
+        <label class="nwEmail">Nieuw email:</label>
+        <input type="email" name="nwEmail" placeholder="email" class="input">
+        <br>
+        <button type="submit" name="nwEmail" class="nwEmail">Nieuw email</button>
+        <?php break;?>
+        <?php if (isset($_SESSION["gelukt"])){?>
+          <p class="font-weight-bold" style="color: green; padding: 20px;"><?php echo $_SESSION["gelukt"] ?>!</p>
+        <?php
+          unset($_SESSION["gelukt"]);
+          }  
+        ?>
+        <br>
+        <?php
+        }
+          }
+        ?>
+  </form>
 </div>
 </body>
 </html>

@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $query = "SELECT * FROM `stewardsinfo` WHERE CONCAT(`Voornaam`, `Naam`, `Tijd`, `Dag`, `afkorting`) LIKE '%".$value."%'";
 
     } else{
-        $query = "SELECT * FROM `stewardsinfo`";
+        $query = "SELECT * FROM `stewardsinfo` order by Voornaam";
     }
 }
 function filterTable($query, $conn)

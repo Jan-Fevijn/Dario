@@ -18,23 +18,23 @@ $resultaat = $conn->query($sql);
 }
 
 //option van tijd
-$sql = "SELECT idTijd, Tijd FROM tijd";
+$sql = "SELECT idTijd, Tijd, Dag FROM tijd";
 
 $resultaat = $conn->query($sql);
 
   if ($resultaat->num_rows > 0) {
 
   while($row = $resultaat->fetch_assoc()){
-    $tijd = $tijd . "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] . "</option>";
+    $tijd = $tijd . "<option value='" . $row["idTijd"] . "'>" . $row["Tijd"] ." ". $row["Dag"] ."</option>";
   }  
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  if (isset($_GET["Tijd"])) {
+if ($_SERVER["REQUEST_METHOD"] == "GET"){
+  if (isset($_GET["tijd"])) {
 
     //select van tijd
-    $sql_tijd = "SELECT idTijd,Tijd FROM tijd WHERE idTijd = '" . $_GET["tijd"] . "'";
+    $sql_tijd = "SELECT idTijd,Tijd,Dag FROM tijd WHERE idTijd = '" . $_GET["tijd"] . "'";
     $result = $conn->query($sql_tijd);
 
     if ($result->num_rows > 0) {
@@ -117,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       </tr>
     </thead>
     <?php
-        $sql = "SELECT * FROM stewardsinfo";
+        $sql = "SELECT * FROM stewardsinfo order by Voornaam";
         $result = $conn->query($sql);
         
         if ($result->num_rows > 0) {
@@ -128,6 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           if ($_GET["idSteward"] == $row["idSteward"]) {
             $_SESSION["LoggedIn"] = $row["idSteward"];
         ?>
+
   <tbody>
       <tr>
         <form action="AdminUpdate.php" name="update" methode="GET">
