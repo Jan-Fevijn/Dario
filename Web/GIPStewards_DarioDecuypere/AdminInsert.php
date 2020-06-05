@@ -30,8 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
       header("location:admininsert.php");
       $_SESSION["gelukt"] = "u steward is toegevoegd, Voeg nu shifts toe om deze te kunnen zien in de tabel.";
-  } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
+  } else{
+    $_SESSION["fout"] = "Er zijn al bestaande gegevens of incorrecte gegevens";
   }
 }
   break;
@@ -91,7 +91,7 @@ break;
   case 3:
     if (isset($_POST["nwEmail"],$_POST["emailsteward"])){
 
-      $sql = "SELECT idSteward, Voornaam, Naam FROM steward WHERE idSteward = '" . $_POST["emailsteward"] . "'";
+    $sql = "SELECT idSteward, Voornaam, Naam FROM steward WHERE idSteward = '" . $_POST["emailsteward"] . "'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -103,11 +103,14 @@ break;
         echo "niet gevonden";
       }
 
-      $sql = "UPDATE steward SET email = '" . $_POST['nwEmail']  ."' WHERE idSteward = '". $_SESSION["emailnieuw"] . "'";
+      $sql = "UPDATE steward SET email = '" . $_POST["nwEmail"]  . "' WHERE idSteward = '" . $_SESSION["emailnieuw"] . "'";
 
       if ($conn->query($sql) === TRUE) {
         $_SESSION["gelukt"] = "email is toegevoegd.";
-        header("location:Admininsert.php");
+        header("location:AdminInsert.php");
+      }
+      else{
+        echo "niet gelukt";
       }
     break;
     }
@@ -276,7 +279,7 @@ break;
                   if ($resultaat->num_rows > 0) {
         
                   while($row = $resultaat->fetch_assoc()){
-                    echo  "<option value='" . $row["idSteward"] . "'>" . $row["Voornaam"] . " " .$row["Naam"] ."</option>";
+                    echo  "<option value='" . $row["idSteward"] . "'>" . $row["Voornaam"] . " " . $row["Naam"] ."</option>";
                   }
         
     }
@@ -288,10 +291,17 @@ break;
         <br>
         <button type="submit" name="nwEmail" class="nwEmail">Nieuw email</button>
         <?php break;?>
+        
         <?php if (isset($_SESSION["gelukt"])){?>
           <p class="font-weight-bold" style="color: green; padding: 20px;"><?php echo $_SESSION["gelukt"] ?>!</p>
         <?php
           unset($_SESSION["gelukt"]);
+          }  
+        ?>
+        <?php if (isset($_SESSION["fout"])){?>
+          <p class="font-weight-bold" style="color: green; padding: 20px;"><?php echo $_SESSION["fout"] ?>!</p>
+        <?php
+          unset($_SESSION["fout"]);
           }  
         ?>
         <br>
