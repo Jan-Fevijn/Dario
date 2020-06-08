@@ -6,13 +6,6 @@
 
 - notificatie systeem
 
-
---
-
-- Algemene site op punt stellen(laatste)
-
-
-
 --
 
 - VB personen toevoegen
