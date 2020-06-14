@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
       if ($conn->query($sql_update_tijd) === TRUE) {
           
       } else {
-          echo "fout bij het aanpassen: " . $conn->error;
+          $_SESSION["fout"] = "shift is niet geupdate omdat er iets niet aangeduid is!";
       }
   }
 
@@ -61,17 +61,17 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
 
     if ($result->num_rows > 0) {
       while($row = $result->fetch_assoc()){
-          $_SESSION['IDplaats'] = $row['idPlaats'];
+          $_SESSION['plaatsid'] = $row['idPlaats'];
       }
     }
 
       //update van plaats
-      $sql_update_plaats = "UPDATE shift SET idPlaats= '" . $_SESSION['IDplaats']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
+      $sql_update_plaats = "UPDATE shift SET idPlaats= '" . $_SESSION['plaatsid']  ."' WHERE idSteward = ". $_SESSION["LoggedIn"] . "";
 
       if ($conn->query($sql_update_plaats) === TRUE) {
-          
+          header("AdminUpdate.php");
       } else {
-          echo "fout bij het aanpassen: " . $conn->error;
+          $_SESSION["fout"] = "shift is niet geupdate omdat er iets niet aangeduid is!";
       }
   }
 }
@@ -95,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
         <a class="nav-link" href="admin.php">Admin</a>
         <a class="nav-link active" href="adminupdatetijd.php">Update</a>
         <a class="nav-link" href="admininsert.php">Toevoegen</a>
+        <a class="nav-link" href="email.php">email</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
@@ -135,13 +136,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
         <th scope="row"><a class="btn btn-outline-primary" onclick="document.forms[0].submit();return false;" href="#">UPDATE</a> </th>
         <td>
         <select name="tijd">
-            <option value = 0><?php echo $row["Tijd"] ?></option>
+            <option value = <?php '"$row["idTijd"]"' ?>><?php echo $row["Tijd"] ?></option>
             <?php echo $tijd?>
         </select>
         </td>
         <td>
         <select name="plaats">
-            <option value = 0><?php echo $row["afkorting"] ?></option>
+            <option value = <?php '"$row["idPlaats"]"' ?>><?php echo $row["afkorting"] ?></option>
             <?php echo $plaats?>
         </select>
         </td>
@@ -167,6 +168,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
         <td><?php echo $row["Naam"]; ?></td>
         <td><?php echo $row["Dag"]; ?></td>
       </tr>
+      <br>
+      <?php if (isset($_SESSION["fout"])){?>
+          <p class="font-weight-bold" style="color: red; padding: 20px;"><?php echo $_SESSION["fout"] ?>!</p>
+        <?php
+          unset($_SESSION["fout"]);
+          }  
+        ?>
+
       <?php
                 }
               }

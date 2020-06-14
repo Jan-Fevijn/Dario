@@ -37,6 +37,7 @@ function filterTable($query, $conn)
         <a class="nav-link active" href="admin.php">Admin</a>
         <a class="nav-link" href="adminupdate.php">Update</a>
         <a class="nav-link" href="admininsert.php">Toevoegen</a>
+        <a class="nav-link" href="email.php">email</a>
         <a class="nav-link" href="afmelden.php">Uitloggen</a>
       </nav>
     </div>
