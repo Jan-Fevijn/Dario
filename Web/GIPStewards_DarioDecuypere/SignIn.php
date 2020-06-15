@@ -13,7 +13,7 @@ function checkLogIn() {
     }
     } else {
         header("location: index.php");
-        $_SESSION["fout"] = "U wachtwoord of email is incorrect!";
+        $_SESSION["foutlogin"] = "U wachtwoord of email is incorrect!";
     }
     
 }

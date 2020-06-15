@@ -25,10 +25,10 @@ include 'conn.php';
   <a href="wwvergeten.php">Wachtwoord Vergeten</a>
   <br>
 
-<?php if (isset($_SESSION["fout"])){?>
-  <p class="font-weight-bold" style="color: red; padding: 20px;"><?php echo $_SESSION["fout"] ?>!</p>
+<?php if (isset($_SESSION["foutlogin"])){?>
+  <p class="font-weight-bold" style="color: red; padding: 20px;"><?php echo $_SESSION["foutlogin"] ?>!</p>
 <?php
-unset($_SESSION["fout"]);
+unset($_SESSION["foutlogin"]);
 }  
 ?>
 </form>
